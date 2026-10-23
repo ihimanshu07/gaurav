@@ -108,7 +108,6 @@
   :root[data-theme="dark"] { color-scheme: dark; }
 
   html { scroll-behavior: smooth; background: var(--bg); }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
     margin: 0;
     background: var(--bg);
@@ -165,7 +164,7 @@
   .tog .rays { transform-origin: 12px 12px; opacity: calc(1 - var(--mode)); transform: rotate(calc(var(--mode) * -90deg)) scale(calc(1 - 0.5 * var(--mode))); transition: transform .8s cubic-bezier(.3, 1.2, .5, 1), opacity .4s; }
   .tog.spin svg { animation: spin .9s cubic-bezier(.3, 1.3, .5, 1); }
   @keyframes spin { from { transform: rotate(-200deg) scale(0.6); } to { transform: none; } }
-  ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
   ::view-transition-old(root) { z-index: 1; }
   ::view-transition-new(root) { z-index: 2; }
   html.theming, html.theming *, html.theming *::before, html.theming *::after { transition: background-color .5s ease, color .5s ease, border-color .5s ease, fill .5s ease !important; }
@@ -344,7 +343,7 @@
   .vault { display: block; padding-top: 40px; }
   .folder { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .f-stage { position: relative; display: block; width: 240px; max-width: 100%; height: 168px; margin: 0 auto; perspective: 800px; animation: bob 5s ease-in-out infinite; }
-  .vault.open .f-stage { animation: none; }
+  .vault.open .f-stage { animation-play-state: paused; }
   @keyframes bob { 50% { transform: translateY(-6px); } }
   .f-back { position: absolute; left: 0; right: 0; bottom: 0; height: 132px; border-radius: 6px 16px 16px 16px; border: 1px solid rgba(var(--a1-rgb), 0.5); background-image: linear-gradient(rgba(var(--a1-rgb), 0.16), rgba(var(--a1-rgb), 0.16)); background-color: var(--bg); }
   .f-back::before { content: ""; position: absolute; left: -1px; top: -15px; width: 86px; height: 16px; border: 1px solid rgba(var(--a1-rgb), 0.5); border-bottom: 0; border-radius: 9px 12px 0 0; background-image: linear-gradient(rgba(var(--a1-rgb), 0.16), rgba(var(--a1-rgb), 0.16)); background-color: var(--bg); }
@@ -400,8 +399,8 @@
   .vault.open .quote .qw { opacity: 1; transform: none; filter: none; transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1), filter .8s ease; transition-delay: calc(2.1s + var(--w, 0) * .09s); }
 
   @media (prefers-reduced-motion: reduce) {
-    .f-stage, .p-float, .p-glow { animation: none; }
-    .panel, .f-front, .f-sheet, .vault .card, .poster, .quote .qw, .aurora i:nth-child(3), .p-img { transition: none !important; }
+    .p-float { animation-duration: 14s; }
+    .p-glow { animation-duration: 12s; }
   }
 
 
@@ -425,7 +424,7 @@
   .title span { display: inline-block; position: relative; overflow: hidden; padding: 9px 20px 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 800; font-size: clamp(17px, 5vw, 26px); letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.2; color: var(--on-a1); background: linear-gradient(100deg, var(--a1), var(--a2)); box-shadow: 0 10px 34px -10px rgba(var(--a1-rgb), 0.7), 0 0 0 1px rgba(var(--dot-rgb), 0.12); }
   .title span::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent); transform: skewX(-20deg); animation: titleShine 4.5s ease-in-out 1.5s infinite; }
   @keyframes titleShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
-  @media (prefers-reduced-motion: reduce) { .title span::after { animation: none; display: none; } }
+
 
   /* Solid mint role badge with a click burst */
   .title { position: relative; width: fit-content; }
@@ -595,7 +594,7 @@
   .lp:hover { color: var(--a1); border-color: var(--a1); }
   .lp:hover svg { transform: translate(2px, -2px); }
   @media (max-width: 520px) { .projs { gap: 68px; } }
-  @media (prefers-reduced-motion: reduce) { .vault .proj, .win { transition: none !important; } }
+
 
   body { touch-action: manipulation; }
 
@@ -603,17 +602,18 @@
   html.anim .bio .w { display: inline-block; opacity: 0; transform: translateY(10px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i, 0) * 32ms); }
   html.anim .bio.in .w { opacity: 1; transform: none; }
   html.anim .rv { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--d, 0) * 90ms); }
-  html.anim .rv-wipe { opacity: 1; transform: none; clip-path: inset(0 100% 0 0); transition: clip-path .9s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--d, 0) * 90ms); }
+  html.anim .rv-wipe { opacity: 1; transform: none; -webkit-clip-path: inset(0 100% 0 0); clip-path: inset(0 100% 0 0); transition: -webkit-clip-path .9s cubic-bezier(.2, .7, .2, 1), clip-path .9s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--d, 0) * 90ms); }
   html.anim .rv.in { opacity: 1; transform: none; }
-  html.anim .rv-wipe.in { clip-path: inset(0 0 0 0); }
+  html.anim .rv-wipe.in { -webkit-clip-path: inset(0 0 0 0); clip-path: inset(0 0 0 0); }
+  html:not(.anim) .panel { grid-template-rows: 1fr; visibility: visible; }
+  html:not(.anim) .vault .proj, html:not(.anim) .poster, html:not(.anim) .quote .qw { opacity: 1; filter: none; transform: none; -webkit-clip-path: none; clip-path: none; }
+  html.no-io .panel { grid-template-rows: 1fr; visibility: visible; }
+  html.no-io .rv, html.no-io .ta .tw, html.no-io .bio .w, html.no-io .proj, html.no-io .poster, html.no-io .quote .qw { opacity: 1 !important; transform: none !important; filter: none !important; -webkit-clip-path: none !important; clip-path: none !important; }
   html.anim .card.rv.in { transition: opacity .8s ease, transform .35s cubic-bezier(.2, .8, .2, 1), filter .8s ease, border-color .3s, box-shadow .35s; }
   html.anim .card.rv.in:hover { transform: translateY(-3px); }
 
 
-  @media (prefers-reduced-motion: reduce) {
-    .aurora i, .marquee .track, h1, .caret, .badge.live i { animation: none; }
-    #prog, #cur { display: none; }
-  }
+
   @media (max-width: 520px) {
     body { padding-block: 76px 130px; }
     section { margin-top: 72px; }
@@ -850,7 +850,7 @@ html.anim .cta-min .crow::after { transform: scaleX(0); transition: transform 1.
 html.anim .cta-min.in .crow { opacity: 1; transform: none; }
 html.anim .cta-min.in .crow::after { transform: scaleX(1); }
 @media (max-width: 520px) { .crow { gap: 12px; padding: 20px 2px; } .c-act span { display: none; } }
-@media (prefers-reduced-motion: reduce) { .tech, .tech .tip, .tech .tip span, .crow, .crow::before, .c-main, .c-act svg { transition: none !important; } }
+
 </style>
 
 <style id="tweaks2">
@@ -903,7 +903,7 @@ html.anim .cta-min.in .mail, html.anim .cta-min.in .sl { opacity: 1; transform: 
 html.anim .cta-min.in .sl:hover { transform: translateY(-3px); transition-delay: 0s; }
 html.anim .cta-min .mail .ul { transform: scaleX(0); transform-origin: left; transition: transform 1.1s cubic-bezier(.2,.7,.2,1) .5s; }
 html.anim .cta-min.in .mail .ul { transform: scaleX(1); }
-@media (prefers-reduced-motion: reduce) { .ml, .mact, .sl, .sl::before, .mail .ul::after { transition: none !important; } .caret, .label.typing::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .label.typing::after { animation-duration: 1.4s; } }
 </style>
 
 <style id="tweaks3">
@@ -912,7 +912,7 @@ html.anim .ta .tw { display: inline-block; opacity: 0; transform: translateY(.6e
 html.anim .ta.ta-in .tw { opacity: 1; transform: none; }
 .ta .tw { display: inline-block; }
 .bio { max-width: 62ch; }
-@media (prefers-reduced-motion: reduce) { .ta .tw { transition: none !important; } }
+
 
 /* Contact card */
 @property --ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
@@ -934,7 +934,7 @@ html.anim .cta-min .cc { opacity: 0; transform: translateY(24px) scale(.97); fil
 html.anim .cta-min.in .cc { opacity: 1; transform: none; filter: none; }
 html.anim .cta-min .mail, html.anim .cta-min .sl, html.anim .cta-min .avail { opacity: 1; transform: none; filter: none; }
 html.anim .cta-min .mail .ul { transform: scaleX(1); }
-@media (prefers-reduced-motion: reduce) { .cc, .cc-in::after, .avail i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .cc { animation-duration: 12s; } .cc-in::after { animation-duration: 14s; } .avail i { animation-duration: 3.6s; } }
 </style>
 
 <style id="final">
@@ -980,9 +980,9 @@ html.anim .ta .tw { transition-delay: min(calc(var(--i, 0) * 38ms), 1.5s); }
 #contact .mailline { margin: 0; min-height: 1.4em; }
 html.anim .cta-min:not(.in) .mail, html.anim .cta-min:not(.in) .sl { opacity: 0; transform: translateY(14px); }
 html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
-@media (prefers-reduced-motion: reduce) { #contact .sl, #contact .sl svg { transition: none !important; } }
+
 </style>
-<noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; clip-path: none !important; }</style></noscript>
+<noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
 
 </head>
 <body>
@@ -990,10 +990,8 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
   (function () {
     var r = document.documentElement;
     try { var s = localStorage.getItem("gs-theme"); if (s === "light" || s === "dark") r.setAttribute("data-theme", s); } catch (e) {}
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      r.classList.add("anim");
-      setTimeout(function () { if (!window.__motionOk) r.classList.remove("anim"); }, 1800);
-    }
+    r.classList.add("anim");
+    setTimeout(function () { if (!window.__motionOk) r.classList.remove("anim"); }, 1800);
   })();
 </script>
 
@@ -1165,10 +1163,9 @@ Singh</h1>
 </div>
 
 <script>
-  window.__motionOk = true;
   (function () {
     var root = document.documentElement;
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var reduce = false;
     function safe(fn) { try { fn(); } catch (e) {} }
 
     /* Email copy */
@@ -1327,15 +1324,24 @@ Singh</h1>
       var rings = [], bits = [];
       readColors();
 
+      var resizeFrame = 0;
       function size() {
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
         W = window.innerWidth; H = window.innerHeight;
         cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
+      function queueSize() {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(function () { resizeFrame = 0; size(); });
+      }
 
       var running = false;
-      function frame() { draw(); if (rings.length || bits.length) requestAnimationFrame(frame); else running = false; }
+      function frame() {
+        if (document.hidden) { running = false; return; }
+        draw();
+        if (rings.length || bits.length) requestAnimationFrame(frame); else running = false;
+      }
       function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
 
       function spawn(x, y) {
@@ -1392,7 +1398,11 @@ Singh</h1>
       }
 
       size();
-      window.addEventListener("resize", size);
+      window.addEventListener("resize", queueSize, { passive: true });
+      window.addEventListener("orientationchange", queueSize, { passive: true });
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && (rings.length || bits.length)) kick();
+      });
       if (!reduce) {
         var TAP_MS = 240, GAP_MS = 320, NEAR = 32, SLOP = 10;
         var down = null, last = null;
@@ -1826,6 +1836,19 @@ Singh</h1>
       });
     });
 
+    /* Keep all content accessible if a reveal API is unavailable. */
+    safe(function () {
+      if ("IntersectionObserver" in window) return;
+      root.classList.add("no-io");
+      document.querySelectorAll(".rv, .ta .tw, .bio .w, .proj, .poster, .quote .qw").forEach(function (el) {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+        el.style.filter = "none";
+        el.style.webkitClipPath = "none";
+        el.style.clipPath = "none";
+      });
+    });
+
     /* Scroll reveals */
     safe(function () {
       var targets = [];
@@ -1855,6 +1878,7 @@ Singh</h1>
       window.addEventListener("load", check);
       check(); setTimeout(check, 400); setTimeout(check, 1500);
     });
+    window.__motionOk = true;
   })();
 </script>
 
