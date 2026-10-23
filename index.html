@@ -419,6 +419,7 @@
   /* Hero: big readable name and a bold role badge */
   .hi .nm { all: unset; }
   .hi > span:first-child { font-size: 15px; color: var(--muted); letter-spacing: 0.14em; }
+  .hi > .open:first-child { color: var(--a1); font-size: 11px; letter-spacing: .14em; white-space: nowrap; }
   h1#name { margin-top: 10px; font-size: clamp(56px, 17vw, 108px); line-height: 0.95; letter-spacing: -0.02em; color: var(--hot); -webkit-text-fill-color: var(--hot); text-shadow: 0 0 46px rgba(var(--a1-rgb), 0.38); }
   .title { margin: 20px 0 0; }
   .title span { display: inline-block; position: relative; overflow: hidden; padding: 9px 20px 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 800; font-size: clamp(17px, 5vw, 26px); letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.2; color: var(--on-a1); background: linear-gradient(100deg, var(--a1), var(--a2)); box-shadow: 0 10px 34px -10px rgba(var(--a1-rgb), 0.7), 0 0 0 1px rgba(var(--dot-rgb), 0.12); }
@@ -994,6 +995,7 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
   }
   h1#name { font-size: clamp(104px, 8.5vw, 144px); line-height: .95; letter-spacing: -.03em; text-shadow: 0 0 18px rgba(var(--a1-rgb), .18); }
   .title { margin-top: 24px; }
+  header .hi { padding-top: 8px; }
   .icons { margin-top: 24px; gap: 24px; }
   #skills { margin-top: 32px; }
   .stack p { margin-bottom: 16px; line-height: 2.25; }
@@ -1016,6 +1018,21 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
   .poster .quote { margin: 0; text-align: left; }
   .poster .p-hint { grid-area: hint; text-align: center; }
 }
+</style>
+<style id="poster-atmosphere">
+.poster { isolation: isolate; --poster-accent: 114, 165, 255; --poster-gx: 50%; --poster-gy: 50%; }
+.poster-atmosphere { position: absolute; z-index: 0; inset: -12%; overflow: hidden; pointer-events: none; }
+.poster-particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.poster-glow-follow { position: absolute; inset: 0; opacity: 0; background: radial-gradient(360px circle at var(--poster-gx) var(--poster-gy), rgba(var(--poster-accent), .22), transparent 70%); transition: opacity .45s ease; pointer-events: none; }
+.poster.glow-on .poster-glow-follow { opacity: 1; }
+.poster::before { content: "FREEDOM"; position: absolute; z-index: 0; left: 50%; top: 50%; color: transparent; font: 800 clamp(64px, 11vw, 180px)/1 var(--font-body); letter-spacing: .08em; -webkit-text-stroke: 1px rgba(var(--poster-accent), .09); text-stroke: 1px rgba(var(--poster-accent), .09); transform: translate(-50%, -50%); animation: posterWordDrift 18s ease-in-out infinite alternate; pointer-events: none; }
+.poster .p-float, .poster .q-stack, .poster .p-hint { position: relative; z-index: 1; }
+.poster .quote em .qw { color: transparent; background: linear-gradient(100deg, var(--a1) 0%, var(--a1) 38%, rgba(255,255,255,.95) 50%, var(--a1) 62%, var(--a1) 100%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; animation: posterShimmer 5s ease-in-out infinite; }
+@keyframes posterWordDrift { to { transform: translate(calc(-50% + 32px), -50%); } }
+@keyframes posterShimmer { 0%, 65% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+@media (hover: none), (pointer: coarse) { .poster-glow-follow { display: none; } }
+@media (prefers-reduced-motion: reduce) { .poster::before, .poster .quote em .qw { animation: none; } .poster-glow-follow { display: none; } }
+@media (max-width: 699px) { .poster::before { font-size: 64px; } .poster-atmosphere { inset: -6%; } }
 </style>
 <noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
 
@@ -1060,7 +1077,7 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 
 <div class="wrap" id="home">
   <header>
-    <div class="hi"><span>Hi, I’m</span><span class="open"><i></i>Open to work</span></div>
+    <div class="hi"><span class="open"><i></i>Open to work</span></div>
     <h1 id="name" aria-label="Gaurav Singh">Gaurav
 Singh</h1>
     <p class="title"><span id="role-badge" role="button" tabindex="0" aria-label="Software Engineer">Software Engineer</span></p>
@@ -1164,6 +1181,7 @@ Singh</h1>
       </article>
     </div>
           <figure class="poster" id="poster">
+            <div class="poster-atmosphere" aria-hidden="true"><canvas class="poster-particles"></canvas><i class="poster-glow-follow"></i></div>
             <div class="p-float" id="p-float" tabindex="0" role="button" aria-label="Hold for 1.5 seconds to change the poster">
               <div class="p-glow" aria-hidden="true"></div>
               <div class="p-img"><img class="cur" draggable="false" src="poster-1.jpg" fetchpriority="low" alt="Anime-style illustration of a joyful white-haired hero laughing under a glowing full moon, a straw hat on his back" width="720" height="1440" decoding="async"><img class="s2" draggable="false" src="poster-2.jpg" fetchpriority="low" alt="Anime-style illustration of a young blond boy grinning with his eyes closed under a bright blue sky" width="720" height="1440" decoding="async"></div><svg class="p-ring" viewBox="0 0 72 72" aria-hidden="true"><circle class="trk" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30"/></svg><div class="p-dust" aria-hidden="true"></div>
@@ -1675,7 +1693,13 @@ Singh</h1>
       var imgs = pimg.querySelectorAll("img");
       var dustBox = fig.querySelector(".p-dust");
       var ring = fig.querySelector(".p-ring .bar");
+      var posters = [{ node: imgs[0], accent: "114, 165, 255" }, { node: imgs[1], accent: "102, 190, 255" }];
       var HOLD = 1500, cur = 0, busy = false, down = false, raf = 0, t0 = 0, sx = 0, sy = 0;
+      function applyAccent(accent) {
+        fig.style.setProperty("--poster-accent", accent);
+        fig.dispatchEvent(new CustomEvent("posteraccentchange", { detail: { accent: accent } }));
+      }
+      applyAccent(posters[cur].accent);
 
       function setP(p) {
         if (ring) ring.style.strokeDashoffset = (188.5 * (1 - p)).toFixed(1);
@@ -1749,6 +1773,7 @@ Singh</h1>
           to.addEventListener("animationend", function () { to.classList.remove("arrive"); }, { once: true });
         }
         cur = 1 - cur;
+        applyAccent(posters[cur].accent);
         fig.classList.add("swapped");
         fig.classList.toggle("alt", cur === 1);
         setTimeout(function () { busy = false; }, reduce ? 400 : 2100);
@@ -1768,6 +1793,90 @@ Singh</h1>
       pf.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); swap(); }
       });
+    });
+
+    /* Poster glow: pointer position eases through CSS variables on fine pointers only. */
+    safe(function () {
+      var fig = document.getElementById("poster");
+      var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!fig || !finePointer.matches || reduced.matches) return;
+      var x = 50, y = 50, tx = 50, ty = 50, raf = 0;
+      function frame() {
+        x += (tx - x) * 0.12; y += (ty - y) * 0.12;
+        fig.style.setProperty("--poster-gx", x.toFixed(2) + "%");
+        fig.style.setProperty("--poster-gy", y.toFixed(2) + "%");
+        if (Math.abs(tx - x) > 0.05 || Math.abs(ty - y) > 0.05) raf = requestAnimationFrame(frame); else raf = 0;
+      }
+      function move(e) {
+        var rect = fig.getBoundingClientRect();
+        tx = ((e.clientX - rect.left) / rect.width) * 100;
+        ty = ((e.clientY - rect.top) / rect.height) * 100;
+        fig.classList.add("glow-on");
+        if (!raf) raf = requestAnimationFrame(frame);
+      }
+      function leave() { fig.classList.remove("glow-on"); }
+      function destroy() {
+        cancelAnimationFrame(raf);
+        fig.removeEventListener("pointermove", move);
+        fig.removeEventListener("pointerleave", leave);
+      }
+      fig.addEventListener("pointermove", move, { passive: true });
+      fig.addEventListener("pointerleave", leave, { passive: true });
+      window.addEventListener("pagehide", destroy, { once: true });
+    });
+
+    /* Poster particles: capped canvas effect, paused outside the viewport or in hidden tabs. */
+    safe(function () {
+      var fig = document.getElementById("poster");
+      var canvas = fig && fig.querySelector(".poster-particles");
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!fig || !canvas || reduced.matches) return;
+      var ctx = canvas.getContext("2d"), particles = [], raf = 0, visible = false, running = false;
+      var width = 0, height = 0, dpr = 1, accent = [114, 165, 255];
+      function reset() {
+        var rect = canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.max(1, rect.width); height = Math.max(1, rect.height);
+        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var count = window.innerWidth < 700 ? 25 : 34;
+        particles = Array.from({ length: count }, function (_, i) {
+          return { x: Math.random() * width, y: Math.random() * height, r: i % 9 === 0 ? 12 + Math.random() * 18 : 1 + Math.random() * 2.2, speed: 7 + Math.random() * 16, drift: (Math.random() - .5) * 10, phase: Math.random() * Math.PI * 2, wisp: i % 9 === 0 };
+        });
+      }
+      function draw(now) {
+        if (!running) return;
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(function (p) {
+          p.y -= p.speed / 60; p.x += Math.sin(now / 1800 + p.phase) * .22 + p.drift / 60;
+          if (p.y < -p.r * 2) { p.y = height + p.r; p.x = Math.random() * width; }
+          if (p.x < -p.r * 2) p.x = width + p.r; if (p.x > width + p.r * 2) p.x = -p.r;
+          var alpha = p.wisp ? .055 : .22;
+          var color = p.wisp ? accent.join(",") : (p.phase > 3 ? "255,255,255" : accent.join(","));
+          if (p.wisp) {
+            var glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+            glow.addColorStop(0, "rgba(" + color + "," + alpha + ")"); glow.addColorStop(1, "rgba(" + color + ",0)");
+            ctx.fillStyle = glow; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r * 2.7, p.r * .7, 0, 0, Math.PI * 2); ctx.fill();
+          } else {
+            ctx.fillStyle = "rgba(" + color + "," + alpha + ")"; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+          }
+        });
+        raf = requestAnimationFrame(draw);
+      }
+      function start() { if (!running && visible && !document.hidden) { running = true; raf = requestAnimationFrame(draw); } }
+      function stop() { running = false; cancelAnimationFrame(raf); raf = 0; }
+      function onVisibility() { if (document.hidden) stop(); else start(); }
+      function onAccent(e) { accent = e.detail.accent.split(",").map(function (v) { return Number(v.trim()); }); }
+      var observer = new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; if (visible) start(); else stop(); }, { threshold: .05 });
+      function resize() { reset(); }
+      reset(); observer.observe(fig);
+      window.addEventListener("resize", resize, { passive: true });
+      document.addEventListener("visibilitychange", onVisibility);
+      fig.addEventListener("posteraccentchange", onAccent);
+      window.addEventListener("pagehide", function () {
+        stop(); observer.disconnect(); window.removeEventListener("resize", resize); document.removeEventListener("visibilitychange", onVisibility); fig.removeEventListener("posteraccentchange", onAccent);
+      }, { once: true });
     });
 
     /* Marquee: clone the set for a seamless loop */
