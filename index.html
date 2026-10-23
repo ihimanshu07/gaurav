@@ -1020,11 +1020,12 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 }
 </style>
 <style id="poster-atmosphere">
-.poster { isolation: isolate; --poster-accent: 114, 165, 255; --poster-gx: 50%; --poster-gy: 50%; }
+.poster { position: relative; isolation: isolate; --poster-accent: 114, 165, 255; }
 .vault.open .panel-in { overflow: visible; }
 .poster-atmosphere { position: absolute; z-index: 0; inset: -12%; overflow: visible; pointer-events: none; }
 .poster-particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.poster-cursor-glow { position: absolute; z-index: 0; left: 0; top: 0; width: 500px; height: 500px; border-radius: 50%; opacity: 0; transform: translate3d(-250px, -250px, 0); background: radial-gradient(circle, rgba(59,91,255,.28) 0%, rgba(59,91,255,.12) 40%, transparent 70%); filter: blur(40px); transition: opacity .35s ease; pointer-events: none; will-change: transform, opacity; }
+.poster-cursor-glow { position: absolute; z-index: 0; left: 0; top: 0; width: 520px; height: 520px; border-radius: 50%; opacity: 0; transform: translate3d(-260px, -260px, 0); background: radial-gradient(circle, rgba(59,91,255,.40) 0%, rgba(59,91,255,.16) 40%, rgba(59,91,255,0) 70%); filter: blur(30px); will-change: transform; transition: opacity 300ms ease; pointer-events: none; }
+.poster-cursor-glow.debug { outline: 2px solid red; }
 .poster.glow-on .poster-cursor-glow { opacity: 1; }
 .poster::before { content: "FREEDOM"; position: absolute; z-index: 0; left: 50%; top: 50%; color: transparent; font: 800 clamp(64px, 11vw, 180px)/1 var(--font-body); letter-spacing: .08em; -webkit-text-stroke: 1px rgba(var(--poster-accent), .09); text-stroke: 1px rgba(var(--poster-accent), .09); transform: translate(-50%, -50%); animation: posterWordDrift 18s ease-in-out infinite alternate; pointer-events: none; }
 .poster .p-float, .poster .q-stack, .poster .p-hint { position: relative; z-index: 1; }
@@ -1796,36 +1797,32 @@ Singh</h1>
       });
     });
 
-    /* Poster cursor glow: a fixed radial layer follows the poster section with eased motion. */
+    /* Poster cursor glow: one direct child tracks window pointer movement within the poster rect. */
     safe(function () {
+      var DEBUG_GLOW = true;
       var fig = document.getElementById("poster");
       var glow = fig && fig.querySelector(".poster-cursor-glow");
       var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
       var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (!fig || !glow || !finePointer.matches || reduced.matches) return;
+      if (DEBUG_GLOW) glow.classList.add("debug");
       var x = 0, y = 0, tx = 0, ty = 0, raf = 0;
       function frame() {
         x += (tx - x) * 0.12; y += (ty - y) * 0.12;
-        glow.style.transform = "translate3d(" + (x - 250).toFixed(1) + "px," + (y - 250).toFixed(1) + "px,0)";
+        glow.style.transform = "translate3d(" + (x - 260).toFixed(1) + "px," + (y - 260).toFixed(1) + "px,0)";
         if (Math.abs(tx - x) > 0.1 || Math.abs(ty - y) > 0.1) raf = requestAnimationFrame(frame); else raf = 0;
       }
       function move(e) {
         var rect = fig.getBoundingClientRect();
+        var inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+        if (!inside) { fig.classList.remove("glow-on"); return; }
         tx = e.clientX - rect.left; ty = e.clientY - rect.top;
-        console.log("poster glow pointermove", { x: Math.round(tx), y: Math.round(ty) });
+        fig.classList.add("glow-on");
+        if (DEBUG_GLOW) console.log("poster glow pointermove", { x: Math.round(tx), y: Math.round(ty) });
         if (!raf) raf = requestAnimationFrame(frame);
       }
-      function enter() { fig.classList.add("glow-on"); }
-      function leave() { fig.classList.remove("glow-on"); }
-      function destroy() {
-        cancelAnimationFrame(raf);
-        fig.removeEventListener("pointermove", move);
-        fig.removeEventListener("pointerenter", enter);
-        fig.removeEventListener("pointerleave", leave);
-      }
-      fig.addEventListener("pointermove", move, { passive: true });
-      fig.addEventListener("pointerenter", enter, { passive: true });
-      fig.addEventListener("pointerleave", leave, { passive: true });
+      function destroy() { cancelAnimationFrame(raf); window.removeEventListener("pointermove", move); }
+      window.addEventListener("pointermove", move, { passive: true });
       window.addEventListener("pagehide", destroy, { once: true });
     });
 
