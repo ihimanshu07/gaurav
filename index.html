@@ -1000,23 +1000,21 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 }
 
 </style>
-<style id="desk-fix">
+<style id="poster-layout">
 @media (min-width: 1100px) {
-  body {
-    padding-left: clamp(32px, 4vw, 72px);
-    padding-right: clamp(32px, 4vw, 72px);
-    font-size: clamp(17px, 1vw + 4px, 20px);
+  .poster {
+    display: grid;
+    grid-template-columns: clamp(260px, 20vw, 360px) minmax(0, 1fr);
+    grid-template-areas: "image quote" "hint quote";
+    column-gap: clamp(48px, 7vw, 140px);
+    align-items: center;
+    max-width: min(1100px, 100%);
+    margin: 112px auto 0;
   }
-  .wrap { max-width: min(1500px, 100%); }
-  .wrap > .bio { max-width: 52ch; }
-  #skills, #contact { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(48px, 5vw, 96px); }
-  #skills .sec-head, #contact .sec-head { grid-column: 1 / span 3; }
-  #skills .stack, #contact .cta-min { grid-column: 5 / -1; max-width: none; }
-  .proj { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(48px, 5vw, 96px); }
-  .proj:nth-child(even) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-  .proj .pt { font-size: clamp(52px, 5vw, 74px); }
-  .quote p { font-size: clamp(42px, 3.8vw, 48px); }
-  .poster { max-width: clamp(340px, 24vw, 410px); }
+  .poster .p-float { grid-area: image; width: 100%; }
+  .poster .q-stack { grid-area: quote; align-self: center; }
+  .poster .quote { margin: 0; text-align: left; }
+  .poster .p-hint { grid-area: hint; text-align: center; }
 }
 </style>
 <noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
