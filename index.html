@@ -406,7 +406,7 @@
 
   /* Mono and slab look, dashed frame, pill sentences */
   .aurora { opacity: 0.55; }
-  .frame { position: fixed; inset: 10px; z-index: 2; pointer-events: none; border: 1px dashed rgba(var(--dot-rgb), 0.17); border-radius: 14px; }
+  .frame { position: fixed; inset: 10px; z-index: 2; pointer-events: none; border: 0; border-radius: 14px; }
   body { font-size: 15px; line-height: 1.85; padding-block: 76px 130px; }
   ::selection { background: rgba(var(--a1-rgb), 0.3); color: var(--hot); }
 
@@ -1021,17 +1021,18 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 </style>
 <style id="poster-atmosphere">
 .poster { isolation: isolate; --poster-accent: 114, 165, 255; --poster-gx: 50%; --poster-gy: 50%; }
-.poster-atmosphere { position: absolute; z-index: 0; inset: -12%; overflow: hidden; pointer-events: none; }
+.vault.open .panel-in { overflow: visible; }
+.poster-atmosphere { position: absolute; z-index: 0; inset: -12%; overflow: visible; pointer-events: none; }
 .poster-particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.poster-glow-follow { position: absolute; inset: 0; opacity: 0; background: radial-gradient(360px circle at var(--poster-gx) var(--poster-gy), rgba(var(--poster-accent), .22), transparent 70%); transition: opacity .45s ease; pointer-events: none; }
-.poster.glow-on .poster-glow-follow { opacity: 1; }
+.poster-cursor-glow { position: absolute; z-index: 0; left: 0; top: 0; width: 500px; height: 500px; border-radius: 50%; opacity: 0; transform: translate3d(-250px, -250px, 0); background: radial-gradient(circle, rgba(59,91,255,.28) 0%, rgba(59,91,255,.12) 40%, transparent 70%); filter: blur(40px); transition: opacity .35s ease; pointer-events: none; will-change: transform, opacity; }
+.poster.glow-on .poster-cursor-glow { opacity: 1; }
 .poster::before { content: "FREEDOM"; position: absolute; z-index: 0; left: 50%; top: 50%; color: transparent; font: 800 clamp(64px, 11vw, 180px)/1 var(--font-body); letter-spacing: .08em; -webkit-text-stroke: 1px rgba(var(--poster-accent), .09); text-stroke: 1px rgba(var(--poster-accent), .09); transform: translate(-50%, -50%); animation: posterWordDrift 18s ease-in-out infinite alternate; pointer-events: none; }
 .poster .p-float, .poster .q-stack, .poster .p-hint { position: relative; z-index: 1; }
 .poster .quote em .qw { color: transparent; background: linear-gradient(100deg, var(--a1) 0%, var(--a1) 38%, rgba(255,255,255,.95) 50%, var(--a1) 62%, var(--a1) 100%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; animation: posterShimmer 5s ease-in-out infinite; }
 @keyframes posterWordDrift { to { transform: translate(calc(-50% + 32px), -50%); } }
 @keyframes posterShimmer { 0%, 65% { background-position: 100% 0; } 100% { background-position: 0 0; } }
-@media (hover: none), (pointer: coarse) { .poster-glow-follow { display: none; } }
-@media (prefers-reduced-motion: reduce) { .poster::before, .poster .quote em .qw { animation: none; } .poster-glow-follow { display: none; } }
+@media (hover: none), (pointer: coarse) { .poster-cursor-glow { display: none; } }
+@media (prefers-reduced-motion: reduce) { .poster::before, .poster .quote em .qw { animation: none; } .poster-cursor-glow { display: none; } }
 @media (max-width: 699px) { .poster::before { font-size: 64px; } .poster-atmosphere { inset: -6%; } }
 </style>
 <noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
@@ -1181,7 +1182,7 @@ Singh</h1>
       </article>
     </div>
           <figure class="poster" id="poster">
-            <div class="poster-atmosphere" aria-hidden="true"><canvas class="poster-particles"></canvas><i class="poster-glow-follow"></i></div>
+            <div class="poster-atmosphere" aria-hidden="true"><canvas class="poster-particles"></canvas></div><div class="poster-cursor-glow" aria-hidden="true"></div>
             <div class="p-float" id="p-float" tabindex="0" role="button" aria-label="Hold for 1.5 seconds to change the poster">
               <div class="p-glow" aria-hidden="true"></div>
               <div class="p-img"><img class="cur" draggable="false" src="poster-1.jpg" fetchpriority="low" alt="Anime-style illustration of a joyful white-haired hero laughing under a glowing full moon, a straw hat on his back" width="720" height="1440" decoding="async"><img class="s2" draggable="false" src="poster-2.jpg" fetchpriority="low" alt="Anime-style illustration of a young blond boy grinning with his eyes closed under a bright blue sky" width="720" height="1440" decoding="async"></div><svg class="p-ring" viewBox="0 0 72 72" aria-hidden="true"><circle class="trk" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30"/></svg><div class="p-dust" aria-hidden="true"></div>
@@ -1795,33 +1796,35 @@ Singh</h1>
       });
     });
 
-    /* Poster glow: pointer position eases through CSS variables on fine pointers only. */
+    /* Poster cursor glow: a fixed radial layer follows the poster section with eased motion. */
     safe(function () {
       var fig = document.getElementById("poster");
+      var glow = fig && fig.querySelector(".poster-cursor-glow");
       var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
       var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-      if (!fig || !finePointer.matches || reduced.matches) return;
-      var x = 50, y = 50, tx = 50, ty = 50, raf = 0;
+      if (!fig || !glow || !finePointer.matches || reduced.matches) return;
+      var x = 0, y = 0, tx = 0, ty = 0, raf = 0;
       function frame() {
         x += (tx - x) * 0.12; y += (ty - y) * 0.12;
-        fig.style.setProperty("--poster-gx", x.toFixed(2) + "%");
-        fig.style.setProperty("--poster-gy", y.toFixed(2) + "%");
-        if (Math.abs(tx - x) > 0.05 || Math.abs(ty - y) > 0.05) raf = requestAnimationFrame(frame); else raf = 0;
+        glow.style.transform = "translate3d(" + (x - 250).toFixed(1) + "px," + (y - 250).toFixed(1) + "px,0)";
+        if (Math.abs(tx - x) > 0.1 || Math.abs(ty - y) > 0.1) raf = requestAnimationFrame(frame); else raf = 0;
       }
       function move(e) {
         var rect = fig.getBoundingClientRect();
-        tx = ((e.clientX - rect.left) / rect.width) * 100;
-        ty = ((e.clientY - rect.top) / rect.height) * 100;
-        fig.classList.add("glow-on");
+        tx = e.clientX - rect.left; ty = e.clientY - rect.top;
+        console.log("poster glow pointermove", { x: Math.round(tx), y: Math.round(ty) });
         if (!raf) raf = requestAnimationFrame(frame);
       }
+      function enter() { fig.classList.add("glow-on"); }
       function leave() { fig.classList.remove("glow-on"); }
       function destroy() {
         cancelAnimationFrame(raf);
         fig.removeEventListener("pointermove", move);
+        fig.removeEventListener("pointerenter", enter);
         fig.removeEventListener("pointerleave", leave);
       }
       fig.addEventListener("pointermove", move, { passive: true });
+      fig.addEventListener("pointerenter", enter, { passive: true });
       fig.addEventListener("pointerleave", leave, { passive: true });
       window.addEventListener("pagehide", destroy, { once: true });
     });
