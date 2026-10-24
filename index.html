@@ -1002,14 +1002,20 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 @keyframes spritePulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.4) drop-shadow(0 0 5px rgba(255,255,255,.8)); } }
 .drag-item.wiggle { animation: spritePulse 1.2s ease-in-out; }
 
-@media (min-width: 700px) {
-  .poster { width: min(calc(100vw - 80px), 1600px); max-width: none; left: 50%; margin: 88px 0 0 calc(-50vw + 40px); }
+@media (min-width: 1100px) {
+  .poster { width: min(calc(100vw - 120px), 1200px); max-width: none; left: 50%; margin: 88px 0 0; transform: translateX(-50%); }
+  .vault.open .poster { transform: translateX(-50%); animation: none; }
+  .park { max-width: none; margin: 0; }
+}
+@media (min-width: 700px) and (max-width: 1099px) {
+  .poster { width: min(calc(100vw - 80px), 920px); max-width: none; margin: 88px auto 0; }
   .park { max-width: none; margin: 0; }
 }
 @media (max-width: 699px) {
   .poster { max-width: 100%; margin: 56px auto 0; left: auto; }
 }
 .vault.open .poster { opacity: 1; transform: none; filter: none; animation: posterEntrance 1.2s cubic-bezier(.2,.8,.2,1) 1.1s both; }
+@media (min-width: 1100px) { .vault.open .poster { transform: translateX(-50%); animation: none; } }
 @keyframes posterEntrance { from { opacity: 0; transform: translateY(30px) scale(0.96); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
 </style>
 <style id="poster-atmosphere">
