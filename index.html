@@ -1002,39 +1002,51 @@ html.anim .cta-min:not(.in) .mail .ul { transform: scaleX(0); }
 }
 
 </style>
-<style id="poster-layout">
-@media (min-width: 1100px) {
-  .poster {
-    display: grid;
-    grid-template-columns: clamp(260px, 20vw, 360px) minmax(0, 1fr);
-    grid-template-areas: "image quote" "hint quote";
-    column-gap: clamp(48px, 7vw, 140px);
-    align-items: center;
-    max-width: min(1100px, 100%);
-    margin: 112px auto 0;
-  }
-  .poster .p-float { grid-area: image; width: 100%; }
-  .poster .q-stack { grid-area: quote; align-self: center; }
-  .poster .quote { margin: 0; text-align: left; }
-  .poster .p-hint { grid-area: hint; text-align: center; }
+<style id="park-video">
+.park { position:relative; width:100%; aspect-ratio:4/3; cursor:pointer; touch-action:manipulation; user-select:none; -webkit-tap-highlight-color:transparent;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 630' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='15'/%3E%3C/filter%3E%3Crect x='20' y='20' width='1040' height='590' rx='64' fill='%23fff' filter='url(%23b)'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 630' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='15'/%3E%3C/filter%3E%3Crect x='20' y='20' width='1040' height='590' rx='64' fill='%23fff' filter='url(%23b)'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  background-image: var(--park-bg, none); background-size: cover; background-position: center;
 }
+@media (min-width:700px){ .park { aspect-ratio:1080/630; } }
+.park video, .park .park-fx { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; transform: translate3d(var(--px, 0px), var(--py, 0px), 0); will-change: transform; transition: transform 0.1s ease-out; }
+:root:not([data-theme="light"]) .park video { filter: brightness(.9) saturate(.95); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="light"]) .park video { filter: none; } }
+[data-theme="light"] .park video { filter: none; }
+.park-snd { position: absolute; top: 14px; right: 14px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.4); background: rgba(0,0,0,0.35); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; touch-action: manipulation; transition: background .2s, transform .2s; }
+.park-snd:hover { background: rgba(0,0,0,0.55); transform: scale(1.05); }
+.park-bub { position: absolute; z-index: 12; background: var(--bg); color: var(--fg); border: 1px dashed rgba(var(--dot-rgb), 0.3); padding: 8px 14px; border-radius: 18px; font-size: 13px; font-family: var(--font-display); box-shadow: 0 8px 24px rgba(0,0,0,0.12); pointer-events: none; animation: bubFloat 4.2s cubic-bezier(.2, .8, .2, 1) forwards; white-space: nowrap; }
+@keyframes bubFloat { 0% { opacity: 0; transform: translate(-50%, 10px) scale(0.85); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1); } 80% { opacity: 1; transform: translate(-50%, -16px) scale(1); } 100% { opacity: 0; transform: translate(-50%, -28px) scale(0.95); } }
+@media (min-width: 1100px) {
+  .poster { display: grid; grid-template-columns: 7fr 5fr; grid-template-areas: "image quote"; column-gap: 40px; align-items: center; max-width: min(1140px, 100%); margin: 112px auto 0; }
+  .poster .park { grid-area: image; width: 100%; }
+  .poster .q-stack { grid-area: quote; align-self: center; }
+  .poster .quote { margin: 0; text-align: left; padding-left: clamp(34px, 3vw, 46px); }
+}
+@media (min-width: 700px) and (max-width: 1099px) {
+  .poster { max-width: 760px; margin: 88px auto 0; }
+  .park { max-width: 760px; margin: 0 auto; }
+  .quote { margin-top: 24px; text-align: center; }
+}
+@media (max-width: 699px) {
+  .poster { max-width: 100%; margin: 56px auto 0; }
+  .quote { margin-top: 20px; text-align: center; }
+}
+.vault.open .poster { opacity: 1; transform: none; filter: none; animation: posterEntrance 1.2s cubic-bezier(.2,.8,.2,1) 1.1s both; }
+@keyframes posterEntrance { from { opacity: 0; transform: translateY(30px) scale(0.96); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+.drag-item { cursor: grab; touch-action: none; transition: filter .2s; }
+.drag-item:active { cursor: grabbing; }
 </style>
 <style id="poster-atmosphere">
 .poster { position: relative; isolation: isolate; --poster-accent: 114, 165, 255; }
 .vault.open .panel-in { overflow: visible; }
-.poster-atmosphere { position: absolute; z-index: 0; inset: -12%; overflow: visible; pointer-events: none; }
-.poster-particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.poster-cursor-glow { position: absolute; z-index: 0; left: 0; top: 0; width: 520px; height: 520px; border-radius: 50%; opacity: 0; transform: translate3d(-260px, -260px, 0); background: radial-gradient(circle, rgba(59,91,255,.40) 0%, rgba(59,91,255,.16) 40%, rgba(59,91,255,0) 70%); filter: blur(30px); will-change: transform; transition: opacity 300ms ease; pointer-events: none; }
-.poster-cursor-glow.debug { outline: 2px solid red; }
-.poster.glow-on .poster-cursor-glow { opacity: 1; }
 .poster::before { content: "FREEDOM"; position: absolute; z-index: 0; left: 50%; top: 50%; color: transparent; font: 800 clamp(64px, 11vw, 180px)/1 var(--font-body); letter-spacing: .08em; -webkit-text-stroke: 1px rgba(var(--poster-accent), .09); text-stroke: 1px rgba(var(--poster-accent), .09); transform: translate(-50%, -50%); animation: posterWordDrift 18s ease-in-out infinite alternate; pointer-events: none; }
-.poster .p-float, .poster .q-stack, .poster .p-hint { position: relative; z-index: 1; }
+.poster .park, .poster .q-stack { position: relative; z-index: 1; }
 .poster .quote em .qw { color: transparent; background: linear-gradient(100deg, var(--a1) 0%, var(--a1) 38%, rgba(255,255,255,.95) 50%, var(--a1) 62%, var(--a1) 100%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; animation: posterShimmer 5s ease-in-out infinite; }
 @keyframes posterWordDrift { to { transform: translate(calc(-50% + 32px), -50%); } }
 @keyframes posterShimmer { 0%, 65% { background-position: 100% 0; } 100% { background-position: 0 0; } }
-@media (hover: none), (pointer: coarse) { .poster-cursor-glow { display: none; } }
-@media (prefers-reduced-motion: reduce) { .poster::before, .poster .quote em .qw { animation: none; } .poster-cursor-glow { display: none; } }
-@media (max-width: 699px) { .poster::before { font-size: 64px; } .poster-atmosphere { inset: -6%; } }
+@media (prefers-reduced-motion: reduce) { .poster::before, .poster .quote em .qw { animation: none; } }
+@media (max-width: 699px) { .poster::before { font-size: 64px; } }
 </style>
 <noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
 
@@ -1182,14 +1194,17 @@ Singh</h1>
       </div>
       </article>
     </div>
-          <figure class="poster" id="poster">
-            <div class="poster-atmosphere" aria-hidden="true"><canvas class="poster-particles"></canvas></div><div class="poster-cursor-glow" aria-hidden="true"></div>
-            <div class="p-float" id="p-float" tabindex="0" role="button" aria-label="Hold for 1.5 seconds to change the poster">
-              <div class="p-glow" aria-hidden="true"></div>
-              <div class="p-img"><img class="cur" draggable="false" src="poster-1.jpg" fetchpriority="low" alt="Anime-style illustration of a joyful white-haired hero laughing under a glowing full moon, a straw hat on his back" width="720" height="1440" decoding="async"><img class="s2" draggable="false" src="poster-2.jpg" fetchpriority="low" alt="Anime-style illustration of a young blond boy grinning with his eyes closed under a bright blue sky" width="720" height="1440" decoding="async"></div><svg class="p-ring" viewBox="0 0 72 72" aria-hidden="true"><circle class="trk" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30"/></svg><div class="p-dust" aria-hidden="true"></div>
-            </div>
-            <div class="q-stack"><blockquote class="quote q1" aria-label="As long as I live, there are infinite chances!"><p aria-hidden="true"><span class="qw" style="--w:0">&ldquo;As</span> <span class="qw" style="--w:1">long</span> <span class="qw" style="--w:2">as</span> <span class="qw" style="--w:3">I</span> <span class="qw" style="--w:4">live,</span> <span class="qw" style="--w:5">there</span> <span class="qw" style="--w:6">are</span> <em><span class="qw" style="--w:7">infinite</span> <span class="qw" style="--w:8">chances!&rdquo;</span></em></p></blockquote><blockquote class="quote q2" aria-label="It&rsquo;s foolish to fear what we&rsquo;ve yet to see and know."><p aria-hidden="true"><span class="qw" style="--w:0">&ldquo;It&rsquo;s</span> <span class="qw" style="--w:1">foolish</span> <span class="qw" style="--w:2">to</span> <span class="qw" style="--w:3">fear</span> <span class="qw" style="--w:4">what</span> <span class="qw" style="--w:5">we&rsquo;ve</span> <em><span class="qw" style="--w:6">yet</span> <span class="qw" style="--w:7">to</span> <span class="qw" style="--w:8">see</span> <span class="qw" style="--w:9">and</span> <span class="qw" style="--w:10">know.&rdquo;</span></em></p></blockquote></div><p class="p-hint">Hold the poster to change it</p>
-          </figure>
+<figure class="poster" id="poster">
+<div class="park" id="park">
+<video muted loop playsinline preload="none" poster="assets/park-poster.jpg" aria-label="Painted park with a rowboat on a pond, ducks, picnickers and people walking on paths">
+<source src="assets/park.webm" type="video/webm">
+<source src="assets/park.mp4" type="video/mp4">
+</video>
+<svg class="park-fx" viewBox="0 0 1080 630" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="glow"><stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#fff0b0" stop-opacity=".6"/><stop offset="1" stop-color="#fff0b0" stop-opacity="0"/></radialGradient></defs><g id="fx"></g><g id="drag"></g></svg>
+<button class="park-snd" id="parkSnd" type="button" aria-pressed="false" aria-label="Toggle sound effects">🔇</button>
+</div>
+<div class="q-stack"><blockquote class="quote q1" aria-label="As long as I live, there are infinite chances!"><p aria-hidden="true"><span class="qw" style="--w:0">&ldquo;As</span> <span class="qw" style="--w:1">long</span> <span class="qw" style="--w:2">as</span> <span class="qw" style="--w:3">I</span> <span class="qw" style="--w:4">live,</span> <span class="qw" style="--w:5">there</span> <span class="qw" style="--w:6">are</span> <em><span class="qw" style="--w:7">infinite</span> <span class="qw" style="--w:8">chances!&rdquo;</span></em></p></blockquote></div>
+</figure>
         </div></div>
       </div>
     </div>
@@ -1672,158 +1687,411 @@ Singh</h1>
       })();
     });
 
-    /* Poster tilt */
+    /* Interactive Park Poster with Video, Draggables, Tap Effects & Sound */
     safe(function () {
-      var fig = document.getElementById("poster");
-      var img = fig.querySelector(".p-img");
-      fig.addEventListener("pointermove", function (e) {
-        var rc = fig.getBoundingClientRect();
-        var x = (e.clientX - rc.left) / rc.width - 0.5, y = (e.clientY - rc.top) / rc.height - 0.5;
-        img.style.setProperty("--ry", (x * 8) + "deg");
-        img.style.setProperty("--rx", (-y * 6) + "deg");
-      });
-      fig.addEventListener("pointerleave", function () {
-        img.style.setProperty("--ry", "0deg"); img.style.setProperty("--rx", "0deg");
-      });
-    });
+      var park = document.getElementById("park");
+      if (!park) return;
+      var video = park.querySelector("video");
+      var sndBtn = document.getElementById("parkSnd");
+      var svg = park.querySelector(".park-fx");
+      var fxGroup = svg.querySelector("#fx");
+      var dragGroup = svg.querySelector("#drag");
+      var vault = document.getElementById("vault");
 
-    /* Poster swap: hold 1.5s, the old poster turns to dust and the next one forms */
-    safe(function () {
-      var fig = document.getElementById("poster");
-      var pf = document.getElementById("p-float");
-      var pimg = fig.querySelector(".p-img");
-      var imgs = pimg.querySelectorAll("img");
-      var dustBox = fig.querySelector(".p-dust");
-      var ring = fig.querySelector(".p-ring .bar");
-      var posters = [{ node: imgs[0], accent: "114, 165, 255" }, { node: imgs[1], accent: "102, 190, 255" }];
-      var HOLD = 1500, cur = 0, busy = false, down = false, raf = 0, t0 = 0, sx = 0, sy = 0;
-      function applyAccent(accent) {
-        fig.style.setProperty("--poster-accent", accent);
-        fig.dispatchEvent(new CustomEvent("posteraccentchange", { detail: { accent: accent } }));
-      }
-      applyAccent(posters[cur].accent);
+      var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var saveData = navigator.connection && navigator.connection.saveData;
 
-      function setP(p) {
-        if (ring) ring.style.strokeDashoffset = (188.5 * (1 - p)).toFixed(1);
-        fig.style.setProperty("--hold", p.toFixed(3));
-      }
-      function stop() {
-        down = false; cancelAnimationFrame(raf);
-        fig.classList.remove("holding"); setP(0);
-      }
-      function loop(now) {
-        if (!down) return;
-        var p = Math.min(1, (now - t0) / HOLD);
-        setP(p);
-        if (p >= 1) { stop(); swap(); return; }
-        raf = requestAnimationFrame(loop);
-      }
-
-      function dust(from) {
-        var W0 = pimg.offsetWidth, H0 = pimg.offsetHeight;
-        if (!W0 || !H0 || !from.naturalWidth) return;
-        var W = Math.min(W0, 420), H = Math.round(W * H0 / W0);
-        var tmp = document.createElement("canvas"); tmp.width = W; tmp.height = H;
-        var tctx = tmp.getContext("2d");
-        tctx.drawImage(from, 0, 0, W, H);
-        var src = tctx.getImageData(0, 0, W, H).data;
-        var N = 22, canvases = [], datas = [], i;
-        for (i = 0; i < N; i++) {
-          var c = document.createElement("canvas"); c.width = W; c.height = H;
-          canvases.push(c); datas.push(c.getContext("2d").createImageData(W, H));
+      if (reduce || saveData) {
+        park.style.setProperty("--park-bg", "url('assets/park-poster.jpg')");
+        if (video) video.remove();
+      } else if (video) {
+        video.onerror = function () {
+          park.style.setProperty("--park-bg", "url('assets/park-poster.jpg')");
+          video.remove();
+        };
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var isOpen = vault && vault.classList.contains("open");
+            if (entry.isIntersecting && isOpen && !document.hidden) {
+              video.preload = "auto";
+              video.play().catch(function () {});
+            } else {
+              video.pause();
+            }
+          });
+        }, { threshold: 0.25 });
+        observer.observe(park);
+        document.addEventListener("visibilitychange", function () {
+          var isOpen = vault && vault.classList.contains("open");
+          if (document.hidden || !isOpen || !park.getBoundingClientRect().top < window.innerHeight) {
+            video.pause();
+          } else {
+            video.play().catch(function () {});
+          }
+        });
+        if (vault) {
+          var obsVault = new MutationObserver(function () {
+            var isOpen = vault.classList.contains("open");
+            if (isOpen && park.getBoundingClientRect().top < window.innerHeight) {
+              video.play().catch(function () {});
+            } else {
+              video.pause();
+            }
+          });
+          obsVault.observe(vault, { attributes: true, attributeFilter: ["class"] });
         }
-        var rx = 0.60 * W, ry = 0.47 * H, cx = 0.5 * W, cy = 0.47 * H;
-        for (var y = 0; y < H; y++) {
-          for (var x = 0; x < W; x++) {
-            var k = (y * W + x) * 4, a = src[k + 3];
-            if (a < 8) continue;
-            var dx = (x - cx) / rx, dy = (y - cy) / ry, d = Math.sqrt(dx * dx + dy * dy), m;
-            if (d <= 0.52) m = 1; else if (d >= 1) continue; else m = 1 - (d - 0.52) / 0.48;
-            a *= m; if (a < 6) continue;
-            var t = 0.55 * (x / W) + 0.45 * (1 - y / H) + (Math.random() - 0.5) * 0.32;
-            var idx = Math.max(0, Math.min(N - 1, Math.floor(t * N)));
-            var dd = datas[idx].data;
-            dd[k] = src[k]; dd[k + 1] = src[k + 1]; dd[k + 2] = src[k + 2]; dd[k + 3] = a;
+      }
+
+      /* Parallax on desktop */
+      if (fine && !reduce && video) {
+        var px = 0, py = 0, ptx = 0, pty = 0, praf = 0;
+        function pFrame() {
+          px += (ptx - px) * 0.1; py += (pty - py) * 0.1;
+          video.style.transform = "translate3d(" + px.toFixed(1) + "px," + py.toFixed(1) + "px,0)";
+          if (Math.abs(ptx - px) > 0.05 || Math.abs(pty - py) > 0.05) praf = requestAnimationFrame(pFrame);
+          else praf = 0;
+        }
+        park.addEventListener("pointermove", function (e) {
+          var rc = park.getBoundingClientRect();
+          var nx = (e.clientX - rc.left) / rc.width - 0.5;
+          var ny = (e.clientY - rc.top) / rc.height - 0.5;
+          ptx = -nx * 6; pty = -ny * 6;
+          if (!praf) praf = requestAnimationFrame(pFrame);
+        });
+        park.addEventListener("pointerleave", function () {
+          ptx = 0; pty = 0;
+          if (!praf) praf = requestAnimationFrame(pFrame);
+        });
+      }
+
+      /* Web Audio API & Sound Toggle */
+      var audioCtx = null, soundOn = false;
+      var lastSoundTime = 0, activeSounds = 0;
+      function initAudio() {
+        if (!audioCtx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      }
+      sndBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        initAudio();
+        soundOn = !soundOn;
+        sndBtn.setAttribute("aria-pressed", soundOn ? "true" : "false");
+        sndBtn.textContent = soundOn ? "🔊" : "🔇";
+        if (soundOn) playSound("chime");
+      });
+      document.addEventListener("pointerdown", function () {
+        if (!audioCtx) initAudio();
+      }, { once: true, passive: true });
+
+      function playSound(type) {
+        if (!soundOn || !audioCtx) return;
+        var now = performance.now();
+        if (now - lastSoundTime < 120 || activeSounds >= 4) return;
+        lastSoundTime = now;
+        activeSounds++;
+
+        try {
+          var t = audioCtx.currentTime;
+          var master = audioCtx.createGain();
+          master.gain.setValueAtTime(0.25, t);
+          master.connect(audioCtx.destination);
+
+          if (type === "bird") {
+            var osc = audioCtx.createOscillator();
+            var g = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(2400, t);
+            osc.frequency.linearRampToValueAtTime(3200, t + 0.08);
+            osc.frequency.linearRampToValueAtTime(2600, t + 0.16);
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(0.2, t + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+            osc.connect(g); g.connect(master);
+            osc.start(t); osc.stop(t + 0.22);
+            setTimeout(function () { activeSounds = Math.max(0, activeSounds - 1); }, 250);
+          } else if (type === "splash" || type === "ripple") {
+            var bufferSize = audioCtx.sampleRate * 0.3;
+            var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            var data = buffer.getChannelData(0);
+            for (var i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            var noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            var filter = audioCtx.createBiquadFilter();
+            filter.type = "bandpass";
+            filter.frequency.setValueAtTime(800, t);
+            filter.frequency.exponentialRampToValueAtTime(300, t + 0.3);
+            filter.Q.value = 3;
+            var g = audioCtx.createGain();
+            g.gain.setValueAtTime(0.25, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+            noise.connect(filter); filter.connect(g); g.connect(master);
+            noise.start(t); noise.stop(t + 0.3);
+            setTimeout(function () { activeSounds = Math.max(0, activeSounds - 1); }, 350);
+          } else if (type === "pop") {
+            var osc = audioCtx.createOscillator();
+            var g = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(300, t);
+            osc.frequency.exponentialRampToValueAtTime(700, t + 0.12);
+            g.gain.setValueAtTime(0.2, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+            osc.connect(g); g.connect(master);
+            osc.start(t); osc.stop(t + 0.15);
+            setTimeout(function () { activeSounds = Math.max(0, activeSounds - 1); }, 180);
+          } else if (type === "chime") {
+            var osc = audioCtx.createOscillator();
+            var g = audioCtx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(523.25, t); // C5
+            osc.frequency.setValueAtTime(659.25, t + 0.1); // E5
+            g.gain.setValueAtTime(0.2, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+            osc.connect(g); g.connect(master);
+            osc.start(t); osc.stop(t + 0.4);
+            setTimeout(function () { activeSounds = Math.max(0, activeSounds - 1); }, 450);
+          } else {
+            activeSounds = Math.max(0, activeSounds - 1);
+          }
+        } catch (err) {
+          activeSounds = 0;
+        }
+      }
+
+      /* Pond Polygon Definition */
+      var pondPoly = [
+        [545,0], [505,80], [505,200], [560,285], [615,340],
+        [720,395], [850,410], [960,414], [1040,380], [1080,350], [1080,0]
+      ];
+      function isInsidePond(x, y) {
+        var inside = false;
+        for (var i = 0, j = pondPoly.length - 1; i < pondPoly.length; j = i++) {
+          var xi = pondPoly[i][0], yi = pondPoly[i][1];
+          var xj = pondPoly[j][0], yj = pondPoly[j][1];
+          var intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+          if (intersect) inside = !inside;
+        }
+        return inside;
+      }
+
+      /* Coordinate conversion */
+      function getSvgPoint(clientX, clientY) {
+        var pt = svg.createSVGPoint();
+        pt.x = clientX; pt.y = clientY;
+        var ctm = svg.getScreenCTM();
+        if (ctm) {
+          var sp = pt.matrixTransform(ctm.inverse());
+          return { x: sp.x, y: sp.y };
+        }
+        var rc = svg.getBoundingClientRect();
+        return {
+          x: (clientX - rc.left) / rc.width * 1080,
+          y: (clientY - rc.top) / rc.height * 630
+        };
+      }
+
+      /* Tap Effects & Bubbles */
+      var thoughtLines = [
+        "i should call my mother",
+        "what a lovely afternoon",
+        "five more minutes",
+        "did i lock the door?",
+        "that boat looks so peaceful",
+        "i should write that email",
+        "maybe tea later"
+      ];
+      var activeBubbles = 0;
+
+      park.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".park-snd") || e.target.closest(".drag-item")) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var pt = getSvgPoint(e.clientX, e.clientY);
+
+        if (isInsidePond(pt.x, pt.y)) {
+          // Whirlpool
+          playSound("ripple");
+          var wh = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          wh.innerHTML = '<path d="M720,395 m0,0 c10,-10 20,5 15,15 c-10,20 -30,10 -25,-10 c10,-35 40,-20 30,15 c-20,45 -60,25 -45,-20 c20,-60 80,-35 60,30" fill="none" stroke="#0b3b86" stroke-width="3" opacity="0.55"/><path d="M720,395 m0,0 c10,-10 20,5 15,15 c-10,20 -30,10 -25,-10 c10,-35 40,-20 30,15 c-20,45 -60,25 -45,-20 c20,-60 80,-35 60,30" fill="none" stroke="#bfe8ff" stroke-width="1.6" opacity="0.7"/><circle cx="720" cy="395" r="20" fill="none" stroke="#bfe8ff" stroke-width="1.5" opacity="0.6"/><circle cx="720" cy="395" r="44" fill="none" stroke="#bfe8ff" stroke-width="1" opacity="0.4"/>';
+          wh.setAttribute("transform", "translate(" + (pt.x - 720) + "," + (pt.y - 395) + ")");
+          wh.style.transformOrigin = "720px 395px";
+          wh.style.animation = "whirlAnim 2.8s ease-out forwards";
+          fxGroup.appendChild(wh);
+          if (!reduce) {
+            wh.animate([
+              { transform: "translate(" + (pt.x - 720) + "," + (pt.y - 395) + ") scale(0.15) rotate(0deg)", opacity: 0 },
+              { opacity: 1, offset: 0.15 },
+              { transform: "translate(" + (pt.x - 720) + "," + (pt.y - 395) + ") scale(1.35) rotate(300deg)", opacity: 0 }
+            ], { duration: 2800, easing: "ease-out" });
+          }
+          setTimeout(function () { if (wh.parentNode) wh.parentNode.removeChild(wh); }, 2800);
+        } else {
+          // Warm glow & Thought bubble
+          playSound("chime");
+          var gl = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          gl.setAttribute("cx", pt.x);
+          gl.setAttribute("cy", pt.y);
+          gl.setAttribute("r", "60");
+          gl.setAttribute("fill", "url(#glow)");
+          fxGroup.appendChild(gl);
+          if (!reduce) {
+            gl.animate([
+              { transform: "scale(0.2)", opacity: 0 },
+              { opacity: 1, offset: 0.2 },
+              { transform: "scale(1.5)", opacity: 0 }
+            ], { duration: 2400, easing: "ease-out" });
+          }
+          setTimeout(function () { if (gl.parentNode) gl.parentNode.removeChild(gl); }, 2400);
+
+          if (activeBubbles < 3) {
+            activeBubbles++;
+            var rc = park.getBoundingClientRect();
+            var leftPct = Math.max(22, Math.min(78, (e.clientX - rc.left) / rc.width * 100));
+            var topPct = Math.max(15, Math.min(80, (e.clientY - rc.top) / rc.height * 100) - 10);
+
+            var bub = document.createElement("div");
+            bub.className = "park-bub";
+            bub.style.left = leftPct + "%";
+            bub.style.top = topPct + "%";
+            var text = thoughtLines[Math.floor(Math.random() * thoughtLines.length)];
+            bub.textContent = text;
+            park.appendChild(bub);
+            setTimeout(function () {
+              if (bub.parentNode) bub.parentNode.removeChild(bub);
+              activeBubbles = Math.max(0, activeBubbles - 1);
+            }, 4200);
           }
         }
-        var tf = getComputedStyle(pimg).transform;
-        dustBox.style.height = H0 + "px";
-        dustBox.style.transform = tf && tf !== "none" ? tf : "";
-        dustBox.innerHTML = "";
-        for (i = 0; i < N; i++) {
-          var cv = canvases[i];
-          cv.getContext("2d").putImageData(datas[i], 0, 0);
-          cv.style.cssText = "position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform,opacity";
-          dustBox.appendChild(cv);
-          cv.animate([
-            { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
-            { transform: "translate(" + (50 + Math.random() * 100) + "px," + (-(30 + Math.random() * 80)) + "px) rotate(" + ((Math.random() - 0.5) * 34) + "deg)", opacity: 0 }
-          ], { duration: 1300 + Math.random() * 400, delay: i * 45, easing: "cubic-bezier(.35,0,.6,1)", fill: "forwards" });
+      });
+
+      /* Draggable Sprites Setup */
+      var boatGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      boatGroup.setAttribute("class", "drag-item");
+      boatGroup.innerHTML = '<g transform="translate(760,300)"><ellipse cx="0" cy="0" rx="36" ry="14" fill="#a0522d" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))"/><path d="M-28,-4 L28,-4 L22,6 L-22,6 Z" fill="#cd853f"/><rect x="-4" y="-14" width="8" height="12" fill="#fff" rx="2"/></g>';
+      dragGroup.appendChild(boatGroup);
+
+      var gardenSprites = [
+        { type: "pot", x: 200, y: 480, svg: '<g transform="translate(200,480)"><path d="M-14,-16 L14,-16 L10,16 L-10,16 Z" fill="#d97736"/><ellipse cx="0" cy="-16" rx="14" ry="4" fill="#f09652"/><circle cx="0" cy="-22" r="10" fill="#4ade80"/><circle cx="-6" cy="-28" r="8" fill="#22c55e"/><circle cx="6" cy="-26" r="8" fill="#16a34a"/></g>' },
+        { type: "basket", x: 380, y: 520, svg: '<g transform="translate(380,520)"><ellipse cx="0" cy="0" rx="22" ry="14" fill="#d4a373"/><path d="M-16,-6 C-16,-20 16,-20 16,-6" fill="none" stroke="#bc6c25" stroke-width="4"/><rect x="-18" y="-4" width="36" height="8" fill="#faedcd" rx="2"/></g>' },
+        { type: "bird", x: 150, y: 180, svg: '<g transform="translate(150,180)"><ellipse cx="0" cy="0" rx="12" ry="8" fill="#60a5fa"/><circle cx="8" cy="-4" r="5" fill="#60a5fa"/><polygon points="12,-4 18,-2 12,0" fill="#f59e0b"/><path d="M-10,2 C-14,8 -6,12 -2,6" fill="none" stroke="#3b82f6" stroke-width="3"/></g>' },
+        { type: "ball", x: 900, y: 530, svg: '<g transform="translate(900,530)"><circle cx="0" cy="0" r="14" fill="#ef4444" filter="drop-shadow(0 3px 4px rgba(0,0,0,0.25))"/><path d="M-14,0 C-4,-8 4,-8 14,0" fill="none" stroke="#fff" stroke-width="3"/></g>' }
+      ];
+
+      var items = [];
+      // Boat
+      items.push({ el: boatGroup.firstElementChild, isBoat: true, x: 760, y: 300, validX: 760, validY: 300 });
+
+      // Garden items
+      gardenSprites.forEach(function (gs) {
+        var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.innerHTML = gs.svg;
+        dragGroup.appendChild(g.firstElementChild);
+        items.push({ el: dragGroup.lastElementChild, isBoat: false, x: gs.x, y: gs.y, validX: gs.x, validY: gs.y });
+      });
+
+      items.forEach(function (item) {
+        var el = item.el;
+        var dragging = false, startX = 0, startY = 0, pointerId = null;
+        var lastX = item.x, lastY = item.y, dxSum = 0;
+
+        el.addEventListener("pointerdown", function (e) {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          e.stopPropagation();
+          dragging = true;
+          pointerId = e.pointerId;
+          try { el.setPointerCapture(pointerId); } catch (err) {}
+          var pt = getSvgPoint(e.clientX, e.clientY);
+          startX = pt.x - item.x; startY = pt.y - item.y;
+          lastX = item.x; lastY = item.y; dxSum = 0;
+          el.style.transform = item.isBoat ? "translate(" + item.x + "px," + item.y + "px) scale(1.12)" : "translate(" + item.x + "px," + item.y + "px) scale(1.12)";
+        });
+
+        el.addEventListener("pointermove", function (e) {
+          if (!dragging || e.pointerId !== pointerId) return;
+          var pt = getSvgPoint(e.clientX, e.clientY);
+          var nx = pt.x - startX, ny = pt.y - startY;
+          dxSum += Math.abs(nx - item.x);
+          item.x = nx; item.y = ny;
+
+          var inPond = isInsidePond(nx, ny);
+          var valid = item.isBoat ? inPond : (!inPond && nx >= 30 && nx <= 1050 && ny >= 30 && ny <= 600);
+
+          if (valid) {
+            item.validX = nx; item.validY = ny;
+          }
+
+          var tilt = item.isBoat ? Math.max(-4, Math.min(4, (nx - lastX) * 0.4)) : 0;
+          el.style.transform = "translate(" + nx.toFixed(1) + "px," + ny.toFixed(1) + "px) scale(1.12) rotate(" + tilt + "deg)";
+          lastX = nx;
+        });
+
+        function endDrag(e) {
+          if (!dragging || (e && e.pointerId !== undefined && e.pointerId !== pointerId)) return;
+          dragging = false;
+          try { el.releasePointerCapture(pointerId); } catch (err) {}
+
+          var inPond = isInsidePond(item.x, item.y);
+          var valid = item.isBoat ? inPond : (!inPond && item.x >= 30 && item.x <= 1050 && item.y >= 30 && item.y <= 600);
+
+          if (!valid) {
+            // Ease back to last valid position
+            el.style.transition = "transform 0.25s cubic-bezier(.2,.8,.2,1)";
+            item.x = item.validX; item.y = item.validY;
+            el.style.transform = "translate(" + item.x + "px," + item.y + "px) scale(1)";
+            setTimeout(function () { el.style.transition = ""; }, 250);
+          } else {
+            el.style.transform = "translate(" + item.x + "px," + item.y + "px) scale(1)";
+            if (dxSum < 6) {
+              // Tap on sprite
+              playSound("pop");
+              if (!reduce) {
+                el.animate([
+                  { transform: "translate(" + item.x + "px," + item.y + "px) scale(1) rotate(0deg)" },
+                  { transform: "translate(" + item.x + "px," + item.y + "px) scale(1.2) rotate(-8deg)" },
+                  { transform: "translate(" + item.x + "px," + item.y + "px) scale(0.95) rotate(6deg)" },
+                  { transform: "translate(" + item.x + "px," + item.y + "px) scale(1) rotate(0deg)" }
+                ], { duration: 400, easing: "ease-in-out" });
+              }
+            } else {
+              // Drop feedback
+              if (item.isBoat) {
+                playSound("ripple");
+                var rip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                rip.setAttribute("cx", item.x); rip.setAttribute("cy", item.y);
+                rip.setAttribute("r", "12");
+                rip.setAttribute("fill", "none"); rip.setAttribute("stroke", "#bfe8ff"); rip.setAttribute("stroke-width", "2");
+                fxGroup.appendChild(rip);
+                if (!reduce) {
+                  rip.animate([
+                    { r: "12", opacity: 1 },
+                    { r: "40", opacity: 0 }
+                  ], { duration: 600, easing: "ease-out" });
+                }
+                setTimeout(function () { if (rip.parentNode) rip.parentNode.removeChild(rip); }, 600);
+              } else {
+                playSound("pop");
+                var puff = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                puff.setAttribute("cx", item.x); puff.setAttribute("cy", item.y);
+                puff.setAttribute("r", "15");
+                puff.setAttribute("fill", "rgba(255,255,255,0.6)");
+                fxGroup.appendChild(puff);
+                if (!reduce) {
+                  puff.animate([
+                    { transform: "scale(0.5)", opacity: 0.8 },
+                    { transform: "scale(1.4)", opacity: 0 }
+                  ], { duration: 400, easing: "ease-out" });
+                }
+                setTimeout(function () { if (puff.parentNode) puff.parentNode.removeChild(puff); }, 400);
+              }
+            }
+          }
         }
-        setTimeout(function () { dustBox.innerHTML = ""; }, 3300);
-      }
 
-      function swap() {
-        if (busy) return;
-        busy = true;
-        var from = imgs[cur], to = imgs[1 - cur];
-        if (!reduce) dust(from);
-        from.classList.remove("cur");
-        to.classList.add("cur");
-        if (!reduce) {
-          to.classList.add("arrive");
-          to.addEventListener("animationend", function () { to.classList.remove("arrive"); }, { once: true });
-        }
-        cur = 1 - cur;
-        applyAccent(posters[cur].accent);
-        fig.classList.add("swapped");
-        fig.classList.toggle("alt", cur === 1);
-        setTimeout(function () { busy = false; }, reduce ? 400 : 2100);
-      }
-
-      pf.addEventListener("pointerdown", function (e) {
-        if (busy || (e.pointerType === "mouse" && e.button !== 0)) return;
-        down = true; sx = e.clientX; sy = e.clientY; t0 = performance.now();
-        fig.classList.add("holding");
-        raf = requestAnimationFrame(loop);
+        el.addEventListener("pointerup", endDrag);
+        el.addEventListener("pointercancel", endDrag);
       });
-      pf.addEventListener("pointermove", function (e) {
-        if (down && Math.hypot(e.clientX - sx, e.clientY - sy) > 14) stop();
-      });
-      ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) { pf.addEventListener(ev, stop); });
-      pf.addEventListener("contextmenu", function (e) { e.preventDefault(); });
-      pf.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); swap(); }
-      });
-    });
-
-    /* Poster cursor glow: one direct child tracks window pointer movement within the poster rect. */
-    safe(function () {
-      var DEBUG_GLOW = true;
-      var fig = document.getElementById("poster");
-      var glow = fig && fig.querySelector(".poster-cursor-glow");
-      var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-      if (!fig || !glow || !finePointer.matches || reduced.matches) return;
-      if (DEBUG_GLOW) glow.classList.add("debug");
-      var x = 0, y = 0, tx = 0, ty = 0, raf = 0;
-      function frame() {
-        x += (tx - x) * 0.12; y += (ty - y) * 0.12;
-        glow.style.transform = "translate3d(" + (x - 260).toFixed(1) + "px," + (y - 260).toFixed(1) + "px,0)";
-        if (Math.abs(tx - x) > 0.1 || Math.abs(ty - y) > 0.1) raf = requestAnimationFrame(frame); else raf = 0;
-      }
-      function move(e) {
-        var rect = fig.getBoundingClientRect();
-        var inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
-        if (!inside) { fig.classList.remove("glow-on"); return; }
-        tx = e.clientX - rect.left; ty = e.clientY - rect.top;
-        fig.classList.add("glow-on");
-        if (DEBUG_GLOW) console.log("poster glow pointermove", { x: Math.round(tx), y: Math.round(ty) });
-        if (!raf) raf = requestAnimationFrame(frame);
-      }
-      function destroy() { cancelAnimationFrame(raf); window.removeEventListener("pointermove", move); }
-      window.addEventListener("pointermove", move, { passive: true });
-      window.addEventListener("pagehide", destroy, { once: true });
     });
 
     /* Poster particles: capped canvas effect, paused outside the viewport or in hidden tabs. */
