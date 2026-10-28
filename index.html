@@ -1153,6 +1153,27 @@ html, body { overflow-x: clip; }
 @media (min-width:1600px) { h1#name { font-size:clamp(182px,10.6vw,230px); } }
 @media (max-width:699px) { .profile-photo { width:min(58vw,190px); } }
 /* Keep the name compact enough to fit the three-column hero. */
+/* Dark-theme equivalent of the supplied DarkGradientBg React wrapper. This plain HTML site has no React/shadcn runtime. */
+:root:not([data-theme="light"]) body {
+  background-color: #000;
+  background-image:
+    radial-gradient(100% 100% at 0% 0%, rgb(46,46,46) 0%, rgb(0,0,0) 64%),
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,.1) 1px, transparent 0);
+  background-size: auto, 20px 20px;
+}
+:root:not([data-theme="light"]) body::before {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: .2;
+  background: linear-gradient(rgb(0,207,255) 0%, rgba(0,207,255,0) 100%);
+  -webkit-mask: linear-gradient(90deg, transparent 0%, #000 20%, transparent 36%, #000 55%, rgba(0,0,0,.13) 67%, #000 78%, transparent 97%);
+  mask: linear-gradient(90deg, transparent 0%, #000 20%, transparent 36%, #000 55%, rgba(0,0,0,.13) 67%, #000 78%, transparent 97%);
+  transform: skewX(45deg);
+}
+:root[data-theme="light"] body { background-image: none; }
 h1#name { font-size:clamp(36px,4.2vw,54px) !important; line-height:1; }
 .title span, :root .title span { font-size:clamp(13px,1.35vw,17px) !important; line-height:1.2; }
 .wrap > .bio { font-size:clamp(13px,1.12vw,18px) !important; }
