@@ -1139,7 +1139,7 @@ html, body { overflow-x: clip; }
 :root[data-theme="light"] .hwf-root { --hwf-bg:#efebe3; --hwf-ink:#17150f; --hwf-warm:#c2361c; }
 .hwf-root canvas { position:absolute; inset:0; width:100%; height:100%; display:block; max-width:none; }
 .hwf-top { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1.25fr) repeat(3,minmax(0,1fr)); gap:24px; padding:clamp(22px,3.4vw,40px) clamp(20px,3.4vw,44px) 0; font:10.5px/1.75 var(--font-mono); letter-spacing:.18em; text-transform:uppercase; }
-.hwf-brand strong { display:block; font-weight:500; }.hwf-brand span { opacity:.45; }.hwf-col h3 { margin:0; font:inherit; opacity:.4; font-weight:500; }.hwf-col a,.hwf-up { display:block; color:inherit; text-decoration:none; opacity:.78; background:none; border:0; padding:0; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; background-image:linear-gradient(currentColor,currentColor); background-size:0 1px; background-repeat:no-repeat; background-position:0 100%; transition:opacity .25s ease,background-size .35s cubic-bezier(.2,.7,.1,1); }.hwf-col a:hover,.hwf-up:hover { opacity:1; background-size:100% 1px; }.hwf-col a:focus-visible,.hwf-up:focus-visible { outline:1px solid currentColor; outline-offset:3px; opacity:1; }
+.hwf-brand strong { display:block; font-weight:500; }.hwf-meta { margin:0; opacity:.45; }.hwf-col h3 { margin:0; font:inherit; opacity:.4; font-weight:500; }.hwf-col a,.hwf-up { display:block; color:inherit; text-decoration:none; opacity:.78; background:none; border:0; padding:0; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; background-image:linear-gradient(currentColor,currentColor); background-size:0 1px; background-repeat:no-repeat; background-position:0 100%; transition:opacity .25s ease,background-size .35s cubic-bezier(.2,.7,.1,1); }.hwf-col a:hover,.hwf-up:hover { opacity:1; background-size:100% 1px; }.hwf-col a:focus-visible,.hwf-up:focus-visible { outline:1px solid currentColor; outline-offset:3px; opacity:1; }
 .hwf-rule { position:relative; z-index:1; display:flex; justify-content:flex-end; align-items:center; gap:16px; margin:clamp(18px,2.6vw,30px) clamp(20px,3.4vw,44px) 0; padding-top:12px; border-top:.5px solid color-mix(in srgb,var(--hwf-ink) 16%,transparent); font:10.5px var(--font-mono); letter-spacing:.18em; text-transform:uppercase; }.hwf-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 @media (max-width:720px) { .hwf-root { height:420px; }.hwf-top { grid-template-columns:minmax(0,1fr) minmax(0,1fr); row-gap:18px; }.hwf-brand { grid-column:1/-1; } }
 @media (prefers-reduced-motion:reduce) { .hwf-col a,.hwf-up { transition:none; } }
@@ -1410,10 +1410,26 @@ Singh</h1>
     <canvas id="halftoneCanvas" aria-hidden="true"></canvas>
     <span class="hwf-sr">GAURAV</span>
     <div class="hwf-top">
-      <div class="hwf-brand"><strong>G</strong>aurav Singh</strong><span>©</span>2026 · Varanasi, India</div>span></div>
-      <nav class="hwf-col" aria-label="Explore"><h3>Explore</h3><a</h3> href="#home">Home</a><a href="#skills">Stack</a><a href="#work">Work</a></nav>
-      <nav class="hwf-col" aria-label="Elsewhere"><h3>Else</h3>where</h3><a href="https://github.com/ihimanshu07" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://www.linkedin.com/in/gauravsingh31/" target="_blank" rel="noopener noreferrer">LinkedIn</a></nav>
-      <nav class="hwf-col" aria-label="Contact"><h3>Contact</h3><a</h3> href="mailto:gauravsingx@gmail.com">Email</a><a href="#contact">Say hello</a></nav>
+      <div class="hwf-brand">
+        <strong>Gaurav Singh</strong>
+        <p class="hwf-meta">©2026 — Varanasi, India</p>
+      </div>
+      <nav class="hwf-col" aria-label="Explore">
+        <h3>Explore</h3>
+        <a href="#home">Home</a>
+        <a href="#skills">Stack</a>
+        <a href="#work">Work</a>
+      </nav>
+      <nav class="hwf-col" aria-label="Elsewhere">
+        <h3>Elsewhere</h3>
+        <a href="https://github.com/ihimanshu07" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/gauravsingh31/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+      <nav class="hwf-col" aria-label="Contact">
+        <h3>Contact</h3>
+        <a href="mailto:gauravsingx@gmail.com">Email</a>
+        <a href="#contact">Say hello</a>
+      </nav>
     </div>
     <div class="hwf-rule"><button class="hwf-up" type="button">Back to top ↑</button></div>
   </footer>
