@@ -1151,6 +1151,8 @@ html, body { overflow-x: clip; }
 @media (min-width:1100px) { .tog { width:38px; height:38px; } .tog svg { width:21px; height:21px; } }
 @media (min-width:1600px) { h1#name { font-size:clamp(182px,10.6vw,230px); } }
 @media (max-width:699px) { .profile-photo { width:min(58vw,190px); } }
+/* Keep the name compact enough to fit the three-column hero. */
+h1#name { font-size:clamp(36px,4.2vw,54px) !important; line-height:1; }
 </style>
 <style id="lightbox-global">
 .lb { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; }
