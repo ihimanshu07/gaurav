@@ -1134,6 +1134,16 @@ html, body { overflow-x: clip; }
 </style>
 <noscript><style>.panel { grid-template-rows: 1fr; visibility: visible; } .vault .proj, .poster, .quote .qw, .bio .w { opacity: 1; filter: none; transform: none; } .rv, .ta .tw { opacity: 1 !important; filter: none !important; transform: none !important; -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
 
+<style id="halftone-wordmark-footer">
+.hwf-root { --hwf-bg:#0c0c0b; --hwf-ink:#e9e4da; --hwf-warm:#e9762b; display:block; position:relative; width:100%; height:clamp(380px,38vw,560px); margin:96px 0 0; overflow:hidden; isolation:isolate; background:var(--hwf-bg); color:var(--hwf-ink); -webkit-font-smoothing:antialiased; }
+:root[data-theme="light"] .hwf-root { --hwf-bg:#efebe3; --hwf-ink:#17150f; --hwf-warm:#c2361c; }
+.hwf-root canvas { position:absolute; inset:0; width:100%; height:100%; display:block; max-width:none; }
+.hwf-top { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1.25fr) repeat(3,minmax(0,1fr)); gap:24px; padding:clamp(22px,3.4vw,40px) clamp(20px,3.4vw,44px) 0; font:10.5px/1.75 var(--font-mono); letter-spacing:.18em; text-transform:uppercase; }
+.hwf-brand strong { display:block; font-weight:500; }.hwf-brand span { opacity:.45; }.hwf-col h3 { margin:0; font:inherit; opacity:.4; font-weight:500; }.hwf-col a,.hwf-up { display:block; color:inherit; text-decoration:none; opacity:.78; background:none; border:0; padding:0; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; background-image:linear-gradient(currentColor,currentColor); background-size:0 1px; background-repeat:no-repeat; background-position:0 100%; transition:opacity .25s ease,background-size .35s cubic-bezier(.2,.7,.1,1); }.hwf-col a:hover,.hwf-up:hover { opacity:1; background-size:100% 1px; }.hwf-col a:focus-visible,.hwf-up:focus-visible { outline:1px solid currentColor; outline-offset:3px; opacity:1; }
+.hwf-rule { position:relative; z-index:1; display:flex; justify-content:flex-end; align-items:center; gap:16px; margin:clamp(18px,2.6vw,30px) clamp(20px,3.4vw,44px) 0; padding-top:12px; border-top:.5px solid color-mix(in srgb,var(--hwf-ink) 16%,transparent); font:10.5px var(--font-mono); letter-spacing:.18em; text-transform:uppercase; }.hwf-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media (max-width:720px) { .hwf-root { height:420px; }.hwf-top { grid-template-columns:minmax(0,1fr) minmax(0,1fr); row-gap:18px; }.hwf-brand { grid-column:1/-1; } }
+@media (prefers-reduced-motion:reduce) { .hwf-col a,.hwf-up { transition:none; } }
+</style>
 <style id="header-profile">
 .profile-photo { width: min(46vw, 190px); aspect-ratio: 1; margin: 28px auto 0; overflow: hidden; border-radius: 18px; background: var(--panel); box-shadow: 0 18px 42px -22px rgba(0,0,0,.42), 0 0 0 1px var(--line); }
 .profile-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
@@ -1396,8 +1406,16 @@ Singh</h1>
     </div>
   </section>
 
-  <footer>
-    <span>Varanasi, India<span class="caret" aria-hidden="true"></span></span>
+  <footer class="hwf-root" id="halftoneFooter">
+    <canvas id="halftoneCanvas" aria-hidden="true"></canvas>
+    <span class="hwf-sr">GAURAV</span>
+    <div class="hwf-top">
+      <div class="hwf-brand"><strong>G</strong>aurav Singh</strong><span>©</span>2026 · Varanasi, India</div>span></div>
+      <nav class="hwf-col" aria-label="Explore"><h3>Explore</h3><a</h3> href="#home">Home</a><a href="#skills">Stack</a><a href="#work">Work</a></nav>
+      <nav class="hwf-col" aria-label="Elsewhere"><h3>Else</h3>where</h3><a href="https://github.com/ihimanshu07" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://www.linkedin.com/in/gauravsingh31/" target="_blank" rel="noopener noreferrer">LinkedIn</a></nav>
+      <nav class="hwf-col" aria-label="Contact"><h3>Contact</h3><a</h3> href="mailto:gauravsingx@gmail.com">Email</a><a href="#contact">Say hello</a></nav>
+    </div>
+    <div class="hwf-rule"><button class="hwf-up" type="button">Back to top ↑</button></div>
   </footer>
 </div>
 
@@ -1996,7 +2014,7 @@ Singh</h1>
     /* Text animate word by word for the about text and body copy */
     safe(function () {
       var animate = root.classList.contains("anim");
-      var els = Array.prototype.slice.call(document.querySelectorAll(".bio, .stack p, .what, footer"));
+      var els = Array.prototype.slice.call(document.querySelectorAll(".bio, .stack p, .what, footer:not(.hwf-root)"));
       els.forEach(function (el) {
         var n = 0;
         (function wrap(node) {
@@ -2088,6 +2106,52 @@ Singh</h1>
       });
     });
 
+    /* Halftone GAURAV footer: native equivalent of the supplied React component. */
+    safe(function () {
+      var footer = document.getElementById("halftoneFooter"), canvas = document.getElementById("halftoneCanvas");
+      if (!footer || !canvas) return;
+      var ctx = canvas.getContext("2d"), reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var W = 0, H = 0, dpr = 1, dots = [], pointer = { x: -1e5, y: -1e5 }, ring = null, raf = 0, visible = true;
+      var word = "GAURAV", gap = 7, radius = 80;
+      function rgb(hex) { var n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+      function palette() { var cs = getComputedStyle(footer); return { bg: cs.getPropertyValue("--hwf-bg").trim(), ink: cs.getPropertyValue("--hwf-ink").trim(), warm: cs.getPropertyValue("--hwf-warm").trim() }; }
+      function layout() {
+        var rect = footer.getBoundingClientRect(); W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height)); dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        gap = W < 640 ? 6 : 7; dots = [];
+        var mask = document.createElement("canvas"); mask.width = W; mask.height = H; var m = mask.getContext("2d"), face = getComputedStyle(document.documentElement).getPropertyValue("--font-body") || "sans-serif";
+        m.font = "800 100px " + face; var measured = m.measureText(word).width, size = measured ? W * 1.02 / measured * 100 : H;
+        m.font = "800 " + size + "px " + face; var box = m.measureText(word), cap = box.actualBoundingBoxAscent || size * .72;
+        m.fillStyle = "#000"; m.textBaseline = "alphabetic"; m.fillText(word, (W - box.width) / 2, H + cap * .2);
+        var data = m.getImageData(0, 0, W, H).data;
+        for (var y = gap / 2; y < H; y += gap) for (var x = gap / 2; x < W; x += gap) {
+          var sum = 0; for (var sy = -1; sy <= 1; sy++) for (var sx = -1; sx <= 1; sx++) { var px = Math.max(0, Math.min(W - 1, Math.round(x + sx * gap / 3))), py = Math.max(0, Math.min(H - 1, Math.round(y + sy * gap / 3))); sum += data[(py * W + px) * 4 + 3]; }
+          var cov = sum / (9 * 255); if (cov > .06) dots.push({ x:x, y:y, hx:x, hy:y, vx:0, vy:0, r:Math.sqrt(cov) * gap * .56 });
+        }
+        draw(performance.now());
+      }
+      function draw(now) {
+        var p = palette(), ink = rgb(p.ink), warm = rgb(p.warm); ctx.fillStyle = p.bg; ctx.fillRect(0, 0, W, H);
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i], dx = d.x - pointer.x, dy = d.y - pointer.y, dist = Math.hypot(dx, dy), vx = d.vx, vy = d.vy;
+          if (!reduceMotion && dist < radius) { var f = (1 - dist / radius) * 2.6, safe = dist || .001; vx += dx / safe * f; vy += dy / safe * f; }
+          if (!reduceMotion && ring && now - ring.t < 900) { var rx = d.hx - ring.x, ry = d.hy - ring.y, rd = Math.hypot(rx, ry) || .001, band = 1 - Math.min(1, Math.abs(rd - (now - ring.t) * .9) / 26); if (band > 0) { vx += rx / rd * band * 3.2; vy += ry / rd * band * 3.2; } }
+          vx = (vx + (d.hx - d.x) * .05) * .84; vy = (vy + (d.hy - d.y) * .05) * .84; d.x += vx; d.y += vy; d.vx = vx; d.vy = vy;
+          var heat = Math.min(1, Math.hypot(d.x - d.hx, d.y - d.hy) / 28), col = heat ? "rgb(" + Math.round(ink[0] + (warm[0] - ink[0]) * heat) + "," + Math.round(ink[1] + (warm[1] - ink[1]) * heat) + "," + Math.round(ink[2] + (warm[2] - ink[2]) * heat) + ")" : p.ink;
+          ctx.fillStyle = col; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      function loop(now) { raf = 0; if (!visible) return; draw(now); raf = requestAnimationFrame(loop); }
+      function wake() { if (!raf && visible) raf = requestAnimationFrame(loop); }
+      function local(e) { var r = canvas.getBoundingClientRect(); return { x:e.clientX-r.left, y:e.clientY-r.top }; }
+      footer.addEventListener("pointermove", function(e){ pointer = local(e); wake(); }, {passive:true});
+      footer.addEventListener("pointerleave", function(){ pointer.x = pointer.y = -1e5; }, {passive:true});
+      footer.addEventListener("pointerdown", function(e){ var q = local(e); ring = {x:q.x,y:q.y,t:performance.now()}; wake(); }, {passive:true});
+      footer.querySelector(".hwf-up").addEventListener("click", function(){ window.scrollTo({top:0, behavior:reduceMotion ? "auto" : "smooth"}); });
+      new ResizeObserver(layout).observe(footer); new IntersectionObserver(function(es){ visible = es[0].isIntersecting; if (visible) wake(); }).observe(footer);
+      (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(layout);
+    });
+
     /* Keep all content accessible if a reveal API is unavailable. */
     safe(function () {
       if ("IntersectionObserver" in window) return;
@@ -2115,7 +2179,7 @@ Singh</h1>
       }
       mark(".icons"); mark(".hi"); mark(".stack p");
       mark(".label", "rv-wipe"); mark("#folder");
-      mark(".cta-min"); mark("footer");
+      mark(".cta-min"); mark("footer:not(.hwf-root)");
 
       function check() {
         var vh = window.innerHeight;
