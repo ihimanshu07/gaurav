@@ -2452,7 +2452,8 @@ Singh</h1>
           }
         }
         var dx = x - px, dy = y - py, d2 = dx * dx + dy * dy;
-        if (r > 0 && d2 < r * r) {                  // pointer push
+        var held = r > 0 && d2 < r * r;
+        if (held) {                                 // pointer push
           var d = Math.sqrt(d2) + 0.001;
           var pf = (1 - d / r) * 2.6;
           vx += (dx / d) * pf; vy += (dy / d) * pf;
@@ -2460,7 +2461,9 @@ Singh</h1>
         vx = (vx + (hx - x) * 0.05) * 0.84;
         vy = (vy + (hy - y) * 0.05) * 0.84;
         x += vx; y += vy;
-        if (Math.abs(vx) + Math.abs(vy) > 0.02 || Math.abs(x - hx) + Math.abs(y - hy) > 0.05) moving = true;
+        var sp = Math.abs(vx) + Math.abs(vy);
+        if (held && sp < 0.15) vx = vy = 0;         // creeping against a resting pointer: freeze so the loop can sleep
+        else if (sp > 0.02 || Math.abs(x - hx) + Math.abs(y - hy) > 0.05) moving = true;
         else { x = hx; y = hy; vx = vy = 0; }
       }
       dots[j] = x; dots[j + 1] = y; dots[j + 2] = vx; dots[j + 3] = vy;
@@ -2500,7 +2503,7 @@ Singh</h1>
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
     }
-    awake = !reduced && (moving || ringAge < 900 || px > -1e4);
+    awake = !reduced && (moving || ringAge < 900);
   }
 
   function loop(now) {
@@ -2536,19 +2539,23 @@ Singh</h1>
 
   // ---- Resize (debounced, width changes only), visibility, fonts ----
   var lastW = 0, timer = 0;
-  new ResizeObserver(function () {
+  function onResize() {
     var cw = Math.round(root.getBoundingClientRect().width);
     if (cw === lastW) return;                       // ignores height-only changes (mobile address bar, our own resize)
     lastW = cw;
     if (!started) return;
     clearTimeout(timer);
     timer = setTimeout(function () { layout(); wake(); }, 120);
-  }).observe(root);
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(root);
+  else window.addEventListener('resize', onResize, { passive: true });
 
-  new IntersectionObserver(function (entries) {
-    visible = entries[0] ? entries[0].isIntersecting : true;
-    if (visible) { updateScroll(); wake(); }
-  }, { rootMargin: '200px 0px' }).observe(root);
+  if ('IntersectionObserver' in window) {           // without it the footer is treated as always visible
+    new IntersectionObserver(function (entries) {
+      visible = entries[0] ? entries[0].isIntersecting : true;
+      if (visible) { updateScroll(); wake(); }
+    }, { rootMargin: '200px 0px' }).observe(root);
+  }
 
   if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', wake);
 
