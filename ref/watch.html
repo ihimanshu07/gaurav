@@ -1,0 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>pond ref</title>
+<style>html,body{margin:0;background:#111;height:100%}video{width:100%;height:100%;object-fit:contain;background:#000}</style>
+<video id="v" src="pond-ref.mp4" muted playsinline controls></video>
+<script>const v=document.getElementById('v'); v.addEventListener('loadedmetadata',()=>{console.log('dur',v.duration,v.videoWidth,v.videoHeight)});</script>
