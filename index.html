@@ -27,7 +27,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Gaurav Singh","jobTitle":"Software Engineer","url":"https://www.gauravsingh.info/","address":{"@type":"PostalAddress","addressLocality":"Varanasi","addressCountry":"IN"},"sameAs":["https://github.com/ihimanshu07","https://www.linkedin.com/in/gauravsingh31/"]}</script>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Manrope:wght@400;500;600;700&family=Instrument+Serif&family=Raleway:wght@500;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Manrope:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Raleway:wght@500;700;800;900&display=swap">
 <style>
   /* Layout: one centered column. A pixel-type header, project cards with live-looking previews, a skills card, a contact card, and a floating dock for navigation. Quiet background: two soft glows and a dot grid that fades toward the edges. Dark-first with a light twin. Mint is the main accent, coral the secondary. */
   :root {
@@ -1190,6 +1190,29 @@ h1#name { font-size:clamp(36px,4.2vw,54px) !important; line-height:1; }
 }
 .title span, :root .title span { font-size:clamp(13px,1.35vw,17px) !important; line-height:1.2; }
 .wrap > .bio { font-size:clamp(13px,1.12vw,18px) !important; }
+/* About: eyebrow label, highlighted phrases, and an intro sized to fill its column. */
+.wrap > .bio::before { content: "About me"; display: block; width: fit-content; margin-bottom: 14px; padding-right: 40px; background: linear-gradient(var(--a1), var(--a1)) no-repeat right center / 28px 1px; font: 700 11px/1 var(--font-mono); letter-spacing: .22em; text-transform: uppercase; color: var(--a1); }
+.bio .hl { color: var(--fg); font-weight: 600; }
+@media (max-width: 999px) { .wrap > .bio { margin-top: 32px; font-size: clamp(15px, 4.1vw, 17px) !important; line-height: 1.75; } }
+@media (min-width: 1000px) {
+  .wrap:has(> .profile-photo[hidden]) > .bio {
+    max-width: 36em; padding-left: clamp(24px, 2.4vw, 40px);
+    border-left: 1.5px solid; border-image: linear-gradient(180deg, var(--a1), rgba(var(--a1-rgb), 0)) 1;
+    font-size: clamp(17px, 1.45vw, 25px) !important; line-height: 1.6; letter-spacing: -.005em;
+  }
+}
+/* Contact: serif headline, quieter email, text links. */
+#contact .cta-min { position: relative; gap: clamp(22px, 3vw, 34px); }
+#contact .c-lede { margin: 0 0 clamp(2px, 1vw, 12px); font-family: var(--font-serif); font-weight: 400; font-size: clamp(42px, 11vw, 112px); line-height: .98; letter-spacing: -.02em; color: var(--fg); text-wrap: balance; transition: opacity .8s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+#contact .c-lede span { display: block; margin-bottom: .45em; font-family: var(--font-body); font-size: clamp(14px, 1.3vw, 17px); letter-spacing: 0; line-height: 1.4; color: var(--muted); }
+#contact .c-lede em { font-style: italic; color: var(--a1); }
+#contact .mt { font-size: clamp(17px, 5.2vw, 26px); font-weight: 600; }
+@media (min-width: 700px) { #contact .mt { font-size: clamp(24px, 3.2vw, 32px); } }
+@media (min-width: 1100px) { #contact .mt { font-size: clamp(28px, 2.4vw, 38px); } }
+#contact .mail { padding-bottom: 12px; }
+#contact .mailline { position: absolute; left: 0; top: 100%; margin-top: 10px; font: 12px/1.4 var(--font-mono); color: var(--a1); }
+html.anim #contact .cta-min:not(.in) .c-lede { opacity: 0; transform: translateY(14px); }
+.hwf { margin-top: clamp(48px, 7vw, 112px); }
 .hi .open { border:0 !important; border-style:none !important; outline:0; background:rgba(34,197,94,.08) !important; box-shadow:none !important; padding:5px 11px; }
 .tech { border:1px solid color-mix(in srgb,var(--c) 48%,var(--line)) !important; border-style:solid !important; background:linear-gradient(145deg,color-mix(in srgb,var(--c) 24%,var(--panel)) 0%,color-mix(in srgb,var(--c) 8%,var(--panel)) 48%,var(--panel) 100%) !important; box-shadow:inset 2px 2px 0 rgba(255,255,255,.2),inset -2px -2px 0 rgba(0,0,0,.25),0 5px 0 color-mix(in srgb,var(--c) 35%,var(--line)),0 11px 20px -11px rgba(0,0,0,.8) !important; transform:perspective(220px) rotateX(5deg); transform-style:preserve-3d; }
 .tech::before { content:""; position:absolute; inset:2px 4px auto; height:38%; border-radius:8px; background:linear-gradient(180deg,rgba(255,255,255,.24),transparent); pointer-events:none; }
@@ -1305,7 +1328,7 @@ Singh</h1>
   </header>
   <div class="profile-photo"><img src="assets/download.jpg" alt="Gaurav Singh smiling" decoding="async" onerror="this.parentElement.hidden=true"></div>
 
-  <p class="bio">Computer Science student passionate about software development, problem-solving, and building practical solutions through technology. I enjoy exploring new technologies, developing projects, and continuously improving my skills. I'm eager to contribute to innovative projects, learn from experienced teams, and grow as a software professional.</p>
+  <p class="bio"><span class="hl">Computer Science student</span> passionate about <span class="hl">software development</span>, problem-solving, and building <span class="hl">practical solutions</span> through technology. I enjoy exploring new technologies, developing projects, and continuously improving my skills. I'm eager to contribute to innovative projects, learn from experienced teams, and grow as a software professional.</p>
 
 
   <section id="skills">
@@ -1415,6 +1438,7 @@ Singh</h1>
   <section id="contact">
     <div class="sec-head"><h2 class="label">Contact</h2></div>
     <div class="cta-min">
+      <p class="c-lede"><span>Have an idea or a role in mind?</span>Let's build it <em>together.</em></p>
       <button class="mail" id="copy-mail" type="button" aria-label="Copy email address">
         <span class="mt" id="mail-text">gauravsingx@gmail.com</span>
         <span class="mact"><span class="lbl">Copy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 012-2h9"/></svg></span>
